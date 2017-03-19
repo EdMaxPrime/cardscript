@@ -79,13 +79,13 @@
         if(arguments.length < 3) {
             if(suit.length == 2) {
                 for(var r in ranks) {
-                    if(ranks[r].symbol == suit.charAt(0)) {
+                    if(ranks[r].symbol == suit.charAt(0).toLowerCase()) {
                         this.rank = ranks[r];
                         break;
                     }
                 }
                 for(var s in suits) {
-                    if(suits[s].symbol == suit.charAt(1)) {
+                    if(suits[s].symbol == suit.charAt(1).toLowerCase()) {
                         this.suit = suits[s];
                         break;
                     }
@@ -106,7 +106,6 @@
         this.size = function() {return cards.length;};
         this.isEmpty = function() {return this.size()==0;};
         this.stringify = function() {
-            console.log(cards);
             var str = "[";
             for(var i = 0; i < cards.length; i++) {
                 str += cards[i].rank.symbol + cards[i].suit.symbol + "@" + cards[i].id;
