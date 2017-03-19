@@ -28,8 +28,8 @@
     var ranks = {
         TWO: {name: "two", symbol: "2", value: 2},
         THREE: {name: "three", symbol: "3", value: 3},
-        KING: {name: "king", symbol: "K", value: 13},
-        ACE: {name: "ace", symbol: "A", value: 1}
+        KING: {name: "king", symbol: "k", value: 13},
+        ACE: {name: "ace", symbol: "a", value: 1}
     };
     function merge(a, b) {
         var union = {};
@@ -108,7 +108,7 @@
         this.stringify = function() {
             var str = "[";
             for(var i = 0; i < cards.length; i++) {
-                str += cards[i].rank.symbol + cards[i].suit.symbol + "@" + cards[i].id;
+                str += cards[i].rank.symbol + cards[i].suit.symbol.toUpperCase() + "@" + cards[i].id;
                 if(i < cards.length - 1) {str += ", ";}
             }
             return str + "]";
