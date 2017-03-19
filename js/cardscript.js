@@ -121,7 +121,7 @@
           - function(suit, rank, index) --> return true to select this card
           - object --> with any of the following properties:
             - index:INT,ARRAY  --> selects cards at this index/indices
-            - range:ARRAY  --> selects cards using python indexing rules
+            - range:OBJECT,ARRAY --> selects cards using python indexing rules
             - property:STRING --> either "highest" or "lowest"
             - suit:CHAR,ARRAY --> must be the one letter symbol of the suit or an array of those
             - rank:CHAR,ARRAY --> must be the one letter symbol of the rank or an array of those
@@ -145,6 +145,29 @@
                         if(indices[i] < 0) indices[i] += this.size();
                         if(indices[i] < this.size() && indices[i] >= 0 && selected.indexOf(indices[i]) == -1) {
                             selected.push(indices[i]);
+                        }
+                    }
+                }
+                if(what.hasOwnProperty("range")) {
+                    var ranges = [];
+                    if(Array.isArray(what.range)) {
+                        ranges = what.range;
+                    } else if(typeof what.range == "object")
+                        ranges.push(what.range);
+                    for(var i = 0; i < ranges.length; i++) {
+                        ranges[i].from = ranges[i].from || 0;
+                        ranges[i].to   = ranges[i].to   || this.size();
+                        ranges[i].step = Math.abs(ranges[i].step) || 1;
+                        if(ranges[i].from < 0) ranges[i].from += this.size();
+                        if(ranges[i].to < 0) ranges[i].to += this.size();
+                        if(ranges[i].from < ranges[i].to) {
+                            for(var j = ranges[i].from; j < ranges[i].to; j += ranges[i].step) {
+                                this.select({index: j});
+                            }
+                        } else if(ranges[i].from > ranges[i].to) {
+                            for(var j = ranges[i].from; j > ranges[i].to; j -= ranges[i].step) {
+                                this.select({index: j});
+                            }
                         }
                     }
                 }
