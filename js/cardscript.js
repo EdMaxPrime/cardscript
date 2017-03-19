@@ -105,11 +105,35 @@
             selected = [];
         this.size = function() {return cards.length;};
         this.isEmpty = function() {return this.size()==0;};
+        /*Selectors:
+          - function(suit, rank, index) --> return true to select this card
+          - object --> with any of the following properties:
+            - index:INT,ARRAY  --> selects cards at this index/indices
+            - range:ARRAY  --> selects cards using python indexing rules
+            - property:STRING --> either "highest" or "lowest"
+            - suit:CHAR,ARRAY --> must be the one letter symbol of the suit or an array of those
+            - rank:CHAR,ARRAY --> must be the one letter symbol of the rank or an array of those
+            */
         this.select = function(what) {
             if(typeof what == "function") {
                 for(var i = 0; i < cards.length; i++) {
                     if(what(cards[i].suit, cards[i].rank, i) === true) {
                         selected.push(i);
+                    }
+                }
+            }
+            else if(typeof what == "object") {
+                if(what.hasOwnProperty("index")) {
+                    var indices = [];
+                    if(typeof what.index == "number")
+                        indices.push(what.index);
+                    else if(Array.isArray(what.index))
+                        indices = what.index;
+                    for(var i = 0; i < indices.length; i++) {
+                        if(indices[i] < 0) indices[i] += this.size();
+                        if(indices[i] < this.size() && indices[i] >= 0) {
+                            selected.push(indices[i]);
+                        }
                     }
                 }
             }
