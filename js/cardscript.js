@@ -150,6 +150,23 @@
                 }
             }
         }
+        this.move = function(selector, destination) {
+            if(arguments.length == 1) {
+                if(arguments[0] instanceof Pile) {
+                    // add() them to the other pile
+                } else {
+                    throw ("Expected a Pile, instead got " + arguments[0]);
+                }
+            }
+            else if(arguments.length == 2) {
+                if(destination instanceof Pile) {
+                    // select()
+                    // add()
+                } else {
+                    throw ("Expected a Pile, instead got " + destination);
+                }
+            }
+        }
         this.stringify = function() {
             var str = "[";
             for(var i = 0; i < cards.length; i++) {
