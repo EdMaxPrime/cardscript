@@ -12,6 +12,8 @@
             var app = new cards.Game();
             var test = app.createPile(["2H", "3D", "KS", "AC"]);
             console.log(test.stringify());
+            test.select({index: [4, -10]});
+            console.log(test.stringSelected());
         </script>
     </body>
 </html>

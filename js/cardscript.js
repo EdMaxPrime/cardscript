@@ -175,7 +175,7 @@
             }
             return str + "]";
         }
-        this.printSelected = function() {
+        this.stringSelected = function() {
             var str = "[";
             for(var i = 0; i < selected.length; i++) {
                 str += cards[selected[i]].rank.symbol + cards[selected[i]].suit.symbol.toUpperCase() + "#" + selected[i];
