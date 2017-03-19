@@ -47,4 +47,10 @@
             rules: {a: "lol"}
         }, opts);
     }
+    function Card(suit, rank, id) {
+        this.suit = suit;
+        this.rank = rank;
+        this.id = id;
+        this.tags = {};
+    }
 })();
