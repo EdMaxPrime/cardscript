@@ -143,7 +143,7 @@
                         indices = what.index;
                     for(var i = 0; i < indices.length; i++) {
                         if(indices[i] < 0) indices[i] += this.size();
-                        if(indices[i] < this.size() && indices[i] >= 0) {
+                        if(indices[i] < this.size() && indices[i] >= 0 && selected.indexOf(indices[i]) == -1) {
                             selected.push(indices[i]);
                         }
                     }
