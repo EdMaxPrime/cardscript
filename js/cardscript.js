@@ -105,5 +105,17 @@
             selected = [];
         this.size = function() {return cards.length;};
         this.isEmpty = function() {return this.size()==0;};
+        this.stringify = function() {
+            console.log(cards);
+            var str = "[";
+            for(var i = 0; i < cards.length; i++) {
+                str += cards[i].rank.symbol + cards[i].suit.symbol + "@" + cards[i].id;
+                if(i < cards.length - 1) {str += ", ";}
+            }
+            return str + "]";
+        }
     }
+    window.cards = {
+        Game: Game
+    };
 })();
