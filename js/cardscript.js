@@ -102,9 +102,21 @@
     }
     function Pile(arrayOfCards) {
         var cards = arrayOfCards,
-            selected = [];
+            selected = [],
+            self = this;
         this.size = function() {return cards.length;};
         this.isEmpty = function() {return this.size()==0;};
+        var popSelected = function() {
+            var staysHere = [], removed = [];
+            for(var i = 0; i < cards.length; i++) {
+                if(selected.indexOf(i) == -1)
+                    staysHere.push(cards[i]);
+                else
+                    removed.push(cards[i]);
+            }
+            cards = staysHere;
+            return removed;
+        }
         /*Selectors:
           - function(suit, rank, index) --> return true to select this card
           - object --> with any of the following properties:
