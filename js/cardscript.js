@@ -105,6 +105,15 @@
             selected = [];
         this.size = function() {return cards.length;};
         this.isEmpty = function() {return this.size()==0;};
+        this.select = function(what) {
+            if(typeof what == "function") {
+                for(var i = 0; i < cards.length; i++) {
+                    if(what(cards[i].suit, cards[i].rank, i) === true) {
+                        selected.push(i);
+                    }
+                }
+            }
+        }
         this.stringify = function() {
             var str = "[";
             for(var i = 0; i < cards.length; i++) {
