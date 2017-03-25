@@ -147,6 +147,7 @@
             return removed;
         }
         /*Selectors:
+          - true   --> select everything
           - function(card, index, selected) --> return true to select this card
           - object --> with any of the following properties:
             - index:INT,ARRAY  --> selects cards at this index/indices
@@ -165,6 +166,11 @@
                         selected.push(i);
                     }
                 }
+            }
+            else if(what === true) { //select all
+                selected = [];
+                for(var x in cards)
+                    selected.push(parseInt(x));
             }
             else if(typeof what == "object") {
                 what.union = what.union || false;
