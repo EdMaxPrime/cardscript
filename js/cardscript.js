@@ -175,6 +175,30 @@
                         }
                     }
                 }
+                if(what.hasOwnProperty("suit")) {
+                    var _suits = [];
+                    if(Array.isArray(what.suit)) {
+                        for(var s = 0; s < what.suit.length; s++) {
+                            if(typeof what.suit[s] == "string" && what.suit[s].length == 1)
+                                _suits.push(what.suit[s].toLowerCase());
+                        }
+                    }
+                    else if(typeof what.suit == "string" && what.suit.length == 1)
+                        _suits.push(what.suit.toLowerCase());
+                    if(what.union == true || selected.length == 0) {
+                        for(var i = 0; i < cards.length; i++) {
+                            if(_suits.indexOf(cards[i].suit.symbol) != -1 && selected.indexOf(i) == -1) {
+                                selected.push(i);
+                            }
+                        }
+                    } else {
+                        for(var i = 0; i < selected.length; ) {
+                            if(_suits.indexOf(cards[selected[i]].suit.symbol) == -1) {
+                                selected.splice(i, 1);
+                            } else {i++;}
+                        }
+                    }
+                }
             }
         }
         this.move = function(selector, destination) {
