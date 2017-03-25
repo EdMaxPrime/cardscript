@@ -63,7 +63,8 @@
     function Game(opts) {
         this.settings = merge({
             players: 1,
-            rules: {a: "lol"}
+            rules: {a: "lol"},
+            order: {a:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, 10:10, j:11, q:12, k:13}
         }, opts);
         var nextCardID = 0;
         this.createPile = function(list) {
@@ -81,6 +82,17 @@
                     }
                 }
                 return new Pile(arrayOfCards, this);
+            }
+        }
+        this.compare = function(c1, c2) {
+            if(arguments.length < 2) {
+                throw ("Cannot compare " + arguments.length + " objects\n  in Game.compare(Card, Card)");
+            } else if(!(c1.hasOwnProperty("rank")) && !(c2.hasOwnProperty("rank"))) {
+                throw ("Cards can only be compared to other cards\n  in Game.compare(Card, Card)");
+            } else {
+                if(this.settings.order[c1.rank] < this.settings.order[c2.rank]) return -1; //c1 < c2
+                if(this.settings.order[c1.rank] == this.settings.order[c2.rank]) return 0; //c1 = c2
+                if(this.settings.order[c1.rank] > this.settings.order[c2.rank]) return 1; //c1 > c2
             }
         }
     }
