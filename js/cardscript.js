@@ -243,6 +243,14 @@
                 //pop selected cards
                 var notMine = popSelected();
                 //add cards to destination
+                switch(method) {
+                    case "start":
+                    destination.add(notMine, 0);
+                    break;
+                    case "end":
+                    destination.add(notMine);
+                    break;
+                }
                 //unselect everything
             } else {
                 throw ("Expected a Pile, instead got " + destination + "\n  in Pile.moveTo(Pile, String)");
