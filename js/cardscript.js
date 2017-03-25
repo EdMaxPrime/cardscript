@@ -387,6 +387,9 @@
                 arrayOfCards.unshift(0); //dont delete
                 arrayOfCards.unshift(where); //start at $where
                 cards.splice.apply(cards, arrayOfCards); //insert
+                for(var s = 0; s < selected.length; s++) {
+                    if(selected[s] >= where) selected[s] += arrayOfCards.length;
+                }
             }
             return this;
         }
