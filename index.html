@@ -10,10 +10,14 @@
         <script type="text/javascript" src="js/cardscript.js"></script>
         <script type="text/javascript">
             var app = new cards.Game();
-            var test = app.createPile(["2H", "3D", "KS", "AC"]);
+            var test = app.createPile(["2H", "3D", "KS", "AC", "KD"]);
             console.log(test.stringify());
-            test.select({index: [3, -1]});
-            console.log(test.stringSelected());
+            test.select(true);
+            test.select({range: {to:2}});
+            console.log(test.view());
+            var test2 = test.remove();
+            console.log(test.stringify());
+            console.log(test2.stringify());
         </script>
     </body>
 </html>
