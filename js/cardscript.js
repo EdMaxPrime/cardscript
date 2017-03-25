@@ -398,6 +398,26 @@
             this.select();
             return p;
         }
+        this.swap = function() {
+            var which = [];
+            if(arguments.length == 0) which = selected;
+            else {
+                for(var i = 0; i < arguments.length; i++) {
+                    if(typeof arguments[i] == "number") {
+                        var index = arguments[i];
+                        if(index < 0) index += this.size();
+                        if(index >= 0 && index < this.size()) which.push(index);
+                    }
+                }
+                this.select();
+            }
+            if(which.length >= 2) {
+                var temp = cards[which[0]];
+                cards[which[0]] = cards[which[1]];
+                cards[which[1]] = temp;
+            }
+            return this;
+        }
         this.randomIndex = function() {
             return Math.floor(Math.random()*this.size());
         }
