@@ -180,6 +180,7 @@
                         ranges = what.range;
                     } else if(typeof what.range == "object")
                         ranges.push(what.range);
+                    var indices = [];
                     for(var i = 0; i < ranges.length; i++) {
                         ranges[i].from = ranges[i].from || 0;
                         ranges[i].to   = ranges[i].to   || this.size();
@@ -188,14 +189,15 @@
                         if(ranges[i].to < 0) ranges[i].to += this.size();
                         if(ranges[i].from < ranges[i].to) {
                             for(var j = ranges[i].from; j < ranges[i].to; j += ranges[i].step) {
-                                this.select({index: j});
+                                if(indices.indexOf(j) == -1) indices.push(j);
                             }
                         } else if(ranges[i].from > ranges[i].to) {
                             for(var j = ranges[i].from; j > ranges[i].to; j -= ranges[i].step) {
-                                this.select({index: j});
+                                if(indices.indexOf(j) == -1) indices.push(j);
                             }
                         }
                     }
+                    this.select({index: indices});
                 }
                 if(what.hasOwnProperty("suit")) {
                     var _suits = [];
