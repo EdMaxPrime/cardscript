@@ -241,11 +241,29 @@
                 method = "end";
             if(destination instanceof Pile) {
                 //pop selected cards
+                var notMine = popSelected();
                 //add cards to destination
                 //unselect everything
             } else {
                 throw ("Expected a Pile, instead got " + destination + "\n  in Pile.moveTo(Pile, String)");
             }
+        }
+        this.add = function(arrayOfCards, where) {
+            if(typeof where != "number") where = this.size();
+            if(where < 0) where += this.size();
+            if(where < 0 || where > this.size()) where = this.size();
+            if(arrayOfCards instanceof Card)
+                arrayOfCards = [arrayOfCards];
+            if(Array.isArray(arrayOfCards)) {
+                for(var i = 0; i < arrayOfCards.length; ) {
+                    if(!(arrayOfCards[i] instanceof Card)) arrayOfCards.splice(i, 1);
+                    else i++;
+                }
+                arrayOfCards.unshift(0); //dont delete
+                arrayOfCards.unshift(where); //start at $where
+                cards.splice.apply(cards, arrayOfCards); //insert
+            }
+            return this;
         }
         this.stringify = function() {
             var str = "[";
