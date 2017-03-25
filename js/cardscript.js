@@ -421,6 +421,22 @@
         this.randomIndex = function() {
             return Math.floor(Math.random()*this.size());
         }
+        /**Expects a string in the form <Rank><Suit> where
+           rank and suit are one-character representations
+           @return  the index of the card, or -1 if not found*/
+        this.find = function(_card) {
+            if(typeof _card == "string" && _card.length == 2) {
+                _card = new Card(_card, -1);
+                for(var i = 0; i < cards.length; i++) {
+                    _card.rank = _card.rank || {symbol:null};
+                    _card.suit = _card.suit || {symbol:null};
+                    if(cards[i].rank.symbol == _card.rank.symbol && cards[i].suit.symbol == _card.suit.symbol) {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
         this.stringify = function() {
             var str = "[";
             for(var i = 0; i < cards.length; i++) {
