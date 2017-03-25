@@ -306,6 +306,11 @@
             }
             return this;
         }
+        this.remove = function() {
+            var p = new Pile(popSelected(), game);
+            this.select();
+            return p;
+        }
         this.randomIndex = function() {
             return Math.floor(Math.random()*this.size());
         }
