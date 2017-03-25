@@ -97,7 +97,7 @@
         }
     }
     function Card(suit, rank, id) {
-        if(arguments.length < 3) {
+        if(arguments.length < 3) { //Card(STRING, id)
             if(suit.length == 2) {
                 for(var r in ranks) {
                     if(ranks[r].symbol == suit.charAt(0).toLowerCase()) {
@@ -120,6 +120,13 @@
             this.id = id;
         }
         this.tags = {};
+        this.copy = function() {
+            var copy = new Card(this.suit, this.rank, this.id);
+            copy.suit = {name:this.suit.name, symbol:this.suit.symbol, html:this.suit.symbol, parity:this.suit.parity};
+            copy.rank = {name:this.rank.name, symbol:this.rank.symbol, value:this.rank.value};
+            copy.tags = JSON.parse(JSON.stringify(this.tags));
+            return copy;
+        }
     }
     function Pile(arrayOfCards, owner) {
         var cards = arrayOfCards,
@@ -140,7 +147,7 @@
             return removed;
         }
         /*Selectors:
-          - function(suit, rank, index) --> return true to select this card
+          - function(card, index, selected) --> return true to select this card
           - object --> with any of the following properties:
             - index:INT,ARRAY  --> selects cards at this index/indices
             - range:OBJECT,ARRAY --> selects cards using python indexing rules
@@ -154,7 +161,7 @@
         this.select = function(what) {
             if(typeof what == "function") {
                 for(var i = 0; i < cards.length; i++) {
-                    if(what(cards[i].suit, cards[i].rank, i) === true) {
+                    if(what(cards[i].copy(), i, selected.slice()) === true) {
                         selected.push(i);
                     }
                 }
