@@ -80,7 +80,7 @@
                         }
                     }
                 }
-                return new Pile(arrayOfCards);
+                return new Pile(arrayOfCards, this);
             }
         }
     }
@@ -109,10 +109,11 @@
         }
         this.tags = {};
     }
-    function Pile(arrayOfCards) {
+    function Pile(arrayOfCards, owner) {
         var cards = arrayOfCards,
             selected = [],
-            self = this;
+            self = this,
+            game = owner;
         this.size = function() {return cards.length;};
         this.isEmpty = function() {return this.size()==0;};
         var popSelected = function() {
@@ -239,6 +240,9 @@
         }
         this.peekSelected = function() {
             return selected.slice(); //return a copy, array of indices
+        }
+        this.count = function() {
+            return selected.length;
         }
         this.moveTo = function(destination, method) {
             if(method!="start"&&method!="before"&&method!="after"&&method!="end"&&method!="random")
