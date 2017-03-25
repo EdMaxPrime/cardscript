@@ -167,10 +167,21 @@
                         indices.push(what.index);
                     else if(Array.isArray(what.index))
                         indices = what.index;
-                    for(var i = 0; i < indices.length; i++) {
+                    for(var i = 0; i < indices.length; ) {
                         if(indices[i] < 0) indices[i] += this.size();
-                        if(indices[i] < this.size() && indices[i] >= 0 && selected.indexOf(indices[i]) == -1) {
-                            selected.push(indices[i]);
+                        if(indices[i] < this.size() && indices[i] >= 0 && (!what.union || selected.indexOf(indices[i]) == -1)) {
+                            i++;
+                        } else {
+                            indices.splice(i, 1);
+                        }
+                    }
+                    if(what.union == true || selected.length == 0) {
+                        selected.push.apply(selected, indices);
+                        console.log("Selected: " + selected);
+                    } else { //intersection
+                        for(var s = 0; s < selected.length; ) {
+                            if(indices.indexOf(selected[s]) == -1) selected.splice(s, 1);
+                            else s++;
                         }
                     }
                 }
@@ -197,7 +208,7 @@
                             }
                         }
                     }
-                    this.select({index: indices});
+                    this.select({index: indices, union: what.union});
                 }
                 if(what.hasOwnProperty("suit")) {
                     var _suits = [];
