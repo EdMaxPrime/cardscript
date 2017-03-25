@@ -199,6 +199,30 @@
                         }
                     }
                 }
+                if(what.hasOwnProperty("rank")) {
+                    var _ranks = [];
+                    if(Array.isArray(what.rank)) {
+                        for(var r = 0; r < what.rank.length; r++) {
+                            if(typeof what.rank[r] == "string" && what.rank[r].length == 1)
+                                _ranks.push(what.rank[r].toLowerCase());
+                        }
+                    }
+                    else if(typeof what.rank == "string" && what.rank.length == 1)
+                        _ranks.push(what.rank.toLowerCase());
+                    if(what.union == true || selected.length == 0) {
+                        for(var i = 0; i < cards.length; i++) {
+                            if(_ranks.indexOf(cards[i].rank.symbol) != -1 && selected.indexOf(i) == -1) {
+                                selected.push(i);
+                            }
+                        }
+                    } else {
+                        for(var i = 0; i < selected.length; ) {
+                            if(_ranks.indexOf(cards[selected[i]].rank.symbol) == -1) {
+                                selected.splice(i, 1);
+                            } else {i++;}
+                        }
+                    }
+                }
             }
         }
         this.move = function(selector, destination) {
