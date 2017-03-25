@@ -235,6 +235,7 @@
             } else {
                 selected = []; //unselect everything
             }
+            return this;
         }
         this.peekSelected = function() {
             return selected.slice(); //return a copy, array of indices
@@ -282,6 +283,7 @@
             } else {
                 throw ("Expected a Pile, instead got " + destination + "\n  in Pile.moveTo(Pile, String)");
             }
+            return this;
         }
         this.add = function(arrayOfCards, where) {
             if(typeof where != "number") where = this.size();
