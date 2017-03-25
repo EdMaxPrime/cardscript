@@ -236,21 +236,15 @@
                 selected = []; //unselect everything
             }
         }
-        this.move = function(selector, destination) {
-            if(arguments.length == 1) {
-                if(arguments[0] instanceof Pile) {
-                    // add() them to the other pile
-                } else {
-                    throw ("Expected a Pile, instead got " + arguments[0]);
-                }
-            }
-            else if(arguments.length == 2) {
-                if(destination instanceof Pile) {
-                    // select()
-                    // add()
-                } else {
-                    throw ("Expected a Pile, instead got " + destination);
-                }
+        this.moveTo = function(destination, method) {
+            if(method!="start"&&method!="before"&&method!="after"&&method!="end"&&method!="alternate")
+                method = "end";
+            if(destination instanceof Pile) {
+                //pop selected cards
+                //add cards to destination
+                //unselect everything
+            } else {
+                throw ("Expected a Pile, instead got " + destination + "\n  in Pile.moveTo(Pile, String)");
             }
         }
         this.stringify = function() {
