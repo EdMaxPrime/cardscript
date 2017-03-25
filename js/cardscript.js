@@ -443,6 +443,12 @@
             }
             return -1;
         }
+        this.reverse = function() {
+            for(var i = 0; i < cards.length/2; i++) {
+                this.swap(i, this.size()-i-1);
+            }
+            return this;
+        }
         this.stringify = function() {
             var str = "[";
             for(var i = 0; i < cards.length; i++) {
