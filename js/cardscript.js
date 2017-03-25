@@ -125,6 +125,9 @@
             - property:STRING --> either "highest" or "lowest"
             - suit:CHAR,ARRAY --> must be the one letter symbol of the suit or an array of those
             - rank:CHAR,ARRAY --> must be the one letter symbol of the rank or an array of those
+            - union:BOOLEAN   --> default false. If true, each property acts like an independent
+                                  selector, otherwise only cards that share all these properties
+                                  are selected
             */
         this.select = function(what) {
             if(typeof what == "function") {
@@ -135,6 +138,7 @@
                 }
             }
             else if(typeof what == "object") {
+                what.union = what.union || false;
                 if(what.hasOwnProperty("index")) {
                     var indices = [];
                     if(typeof what.index == "number")
