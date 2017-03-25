@@ -240,7 +240,7 @@
             return selected.slice(); //return a copy, array of indices
         }
         this.moveTo = function(destination, method) {
-            if(method!="start"&&method!="before"&&method!="after"&&method!="end"&&method!="alternate")
+            if(method!="start"&&method!="before"&&method!="after"&&method!="end"&&method!="random")
                 method = "end";
             if(destination instanceof Pile) {
                 //pop selected cards
@@ -271,6 +271,11 @@
                         if(current == otherIndices.length) {current = 0; resets++;}
                     }
                     break;
+                    default: //random
+                    for(var i = 0; i < notMine.length; i++) {
+                        destination.add(notMine[i], destination.randomIndex()); //will never add to end
+                    }
+                    break;
                 }
                 //unselect everything
             } else {
@@ -293,6 +298,9 @@
                 cards.splice.apply(cards, arrayOfCards); //insert
             }
             return this;
+        }
+        this.randomIndex = function() {
+            return Math.floor(Math.random()*this.size());
         }
         this.stringify = function() {
             var str = "[";
