@@ -262,6 +262,15 @@
                         if(current == otherIndices.length) {current = 0; resets++;}
                     }
                     break;
+                    case "after":
+                    var otherIndices = destination.peekSelected(), current = 0, resets = 0;
+                    if(otherIndices.length == 0) otherIndices = [destination.size()-1]; //insert at end by default
+                    for(var i = 0; i < notMine.length; i++) {
+                        destination.add(notMine[i], otherIndices[current]+current+resets+1);
+                        current++;
+                        if(current == otherIndices.length) {current = 0; resets++;}
+                    }
+                    break;
                 }
                 //unselect everything
             } else {
