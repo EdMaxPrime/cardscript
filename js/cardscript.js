@@ -28,6 +28,15 @@
     var ranks = {
         TWO: {name: "two", symbol: "2", value: 2},
         THREE: {name: "three", symbol: "3", value: 3},
+        FOUR: {name: "four", symbol: "4", value: 4},
+        FIVE: {name: "five", symbol: "5", value: 5},
+        SIX: {name: "six", symbol: "6", value: 6},
+        SEVEN: {name: "seven", symbol: "7", value: 7},
+        EIGHT: {name: "eight", symbol: "8", value: 8},
+        NINE: {name: "nine", symbol: "9", value: 9},
+        TEN: {name: "ten", symbol: "10", value: 10},
+        JACK: {name: "jack", symbol: "j", value: 11},
+        QUEEN: {name: "queen", symbol: "q", value: 12},
         KING: {name: "king", symbol: "k", value: 13},
         ACE: {name: "ace", symbol: "a", value: 1}
     };
