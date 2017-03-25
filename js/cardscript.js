@@ -409,12 +409,18 @@
                         if(index >= 0 && index < this.size()) which.push(index);
                     }
                 }
-                this.select();
             }
             if(which.length >= 2) {
                 var temp = cards[which[0]];
                 cards[which[0]] = cards[which[1]];
                 cards[which[1]] = temp;
+                //updated selection to match swapped changes
+                if(selected.indexOf(which[0]) != -1 && selected.indexOf(which[1]) == -1) {
+                    selected[selected.indexOf(which[0])] = which[1];
+                }
+                else if(selected.indexOf(which[1]) != -1 && selected.indexOf(which[0]) == -1) {
+                    selected[selected.indexOf(which[1])] = which[0];
+                }
             }
             return this;
         }
