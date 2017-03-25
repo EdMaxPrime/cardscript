@@ -90,9 +90,9 @@
             } else if(!(c1.hasOwnProperty("rank")) && !(c2.hasOwnProperty("rank"))) {
                 throw ("Cards can only be compared to other cards\n  in Game.compare(Card, Card)");
             } else {
-                if(this.settings.order[c1.rank] < this.settings.order[c2.rank]) return -1; //c1 < c2
-                if(this.settings.order[c1.rank] == this.settings.order[c2.rank]) return 0; //c1 = c2
-                if(this.settings.order[c1.rank] > this.settings.order[c2.rank]) return 1; //c1 > c2
+                if(this.settings.order[c1.rank.symbol] < this.settings.order[c2.rank.symbol]) return -1; //c1 < c2
+                if(this.settings.order[c1.rank.symbol] == this.settings.order[c2.rank.symbol]) return 0; //c1 = c2
+                if(this.settings.order[c1.rank.symbol] > this.settings.order[c2.rank.symbol]) return 1; //c1 > c2
             }
         }
     }
@@ -242,6 +242,46 @@
                             if(_ranks.indexOf(cards[selected[i]].rank.symbol) == -1) {
                                 selected.splice(i, 1);
                             } else {i++;}
+                        }
+                    }
+                }
+                if(what.hasOwnProperty("property") && (what.property == "highest" || what.property == "lowest") && this.size() > 0) {
+                    if(what.union == true || selected.length == 0) {
+                        var minmax = 0, equal = [0];
+                        for(var i = 1; i < cards.length; i++) {
+                            if(what.property == "highest" && game.compare(cards[i], cards[minmax]) == 1) {
+                                minmax = i;
+                                equal = [i];
+                            }
+                            else if(what.property == "lowest" && game.compare(cards[i], cards[minmax]) == -1) {
+                                minmax = i;
+                                equal = [i];
+                            }
+                            else if(game.compare(cards[i], cards[minmax]) == 0) {
+                                equal.push(i);
+                            }
+                        }
+                        for(var i = 0; i < equal.length; i++) { //only add indices not already there
+                            if(selected.indexOf(equal[i]) == -1) selected.push(equal[i]);
+                        }
+                    } else { //intersection
+                        var minmax = 0, equal = [0];
+                        for(var i = 1; i < selected.length; i++) {
+                            if(what.property == "highest" && game.compare(cards[selected[i]], cards[minmax]) == 1) {
+                                minmax = selected[i];
+                                equal = [selected[i]];
+                            }
+                            else if(what.property == "lowest" && game.compare(cards[selected[i]], cards[minmax]) == -1) {
+                                minmax = selected[i];
+                                equal = [selected[i]];
+                            }
+                            else if(game.compare(cards[i], cards[minmax]) == 0) {
+                                equal.push(selected[i]);
+                            }
+                        }
+                        for(var i = 0; i < selected.length; ) { //only keep indices present in both sets
+                            if(equal.indexOf(selected[i]) == -1) selected.splice(i, 1);
+                            else i++;
                         }
                     }
                 }
