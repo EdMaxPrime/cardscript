@@ -278,6 +278,7 @@
                     break;
                 }
                 //unselect everything
+                this.select();
             } else {
                 throw ("Expected a Pile, instead got " + destination + "\n  in Pile.moveTo(Pile, String)");
             }
