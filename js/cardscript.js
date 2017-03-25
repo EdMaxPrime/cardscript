@@ -318,6 +318,13 @@
         this.peekSelected = function() {
             return selected.slice(); //return a copy, array of indices
         }
+        this.view = function() {
+            var view = [];
+            for(var i = 0; i < selected.length; i++) {
+                view[i] = cards[ selected[i] ].copy();
+            }
+            return view;
+        }
         this.count = function() {
             return selected.length;
         }
