@@ -232,6 +232,8 @@
                         }
                     }
                 }
+            } else {
+                selected = []; //unselect everything
             }
         }
         this.move = function(selector, destination) {
