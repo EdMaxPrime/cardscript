@@ -177,7 +177,6 @@
                     }
                     if(what.union == true || selected.length == 0) {
                         selected.push.apply(selected, indices);
-                        console.log("Selected: " + selected);
                     } else { //intersection
                         for(var s = 0; s < selected.length; ) {
                             if(indices.indexOf(selected[s]) == -1) selected.splice(s, 1);
