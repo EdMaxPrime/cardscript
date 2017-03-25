@@ -253,6 +253,15 @@
                     case "end":
                     destination.add(notMine);
                     break;
+                    case "before":
+                    var otherIndices = destination.peekSelected(), current = 0, resets = 0;
+                    if(otherIndices.length == 0) otherIndices = [0]; //insert to beginning by default
+                    for(var i = 0; i < notMine.length; i++) {
+                        destination.add(notMine[i], otherIndices[current]+current+resets);
+                        current++;
+                        if(current == otherIndices.length) {current = 0; resets++;}
+                    }
+                    break;
                 }
                 //unselect everything
             } else {
