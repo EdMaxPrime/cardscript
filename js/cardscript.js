@@ -84,6 +84,15 @@
                 return new Pile(arrayOfCards, this);
             }
         }
+        this.createDeck52 = function() {
+            var all52 = [];
+            for(var r in ranks) {
+                for(var s in suits) {
+                    all52.push(ranks[r].symbol + suits[s].symbol);
+                }
+            }
+            return this.createPile(all52);
+        }
         this.compare = function(c1, c2) {
             if(arguments.length < 2) {
                 throw ("Cannot compare " + arguments.length + " objects\n  in Game.compare(Card, Card)");
