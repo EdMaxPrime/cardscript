@@ -236,6 +236,9 @@
                 selected = []; //unselect everything
             }
         }
+        this.peekSelected = function() {
+            return selected.slice(); //return a copy, array of indices
+        }
         this.moveTo = function(destination, method) {
             if(method!="start"&&method!="before"&&method!="after"&&method!="end"&&method!="alternate")
                 method = "end";
