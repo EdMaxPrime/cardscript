@@ -389,7 +389,7 @@
         this.forall = function(fxn) {
             if(typeof fxn == "function") {
                 for(var i = 0; i < cards.length; i++) {
-                    fxn(cards[i].copy(), i, (selected.indexOf(i) >= 0)); //fxn(card, index, isSelected?)
+                    fxn(cards[i].copy(), i, (selected.indexOf(i) >= 0), (i==cards.length-1)); //fxn(card, index, isSelected?, isLast?)
                 }
             }
             return this;
