@@ -377,19 +377,21 @@
         this.count = function() {
             return selected.length;
         }
-        this.foreach = function(fxn) {
+        this.foreach = function(fxn, thisValue) {
             if(typeof fxn == "function") {
+                thisValue = thisValue || this;
                 var v = this.view();
                 for(var s = 0; s < v.length; s++) {
-                    fxn(v[s], selected[s], (s==v.length-1)); //fxn(card, index, isLast?)
+                    fxn.call(thisValue, v[s], selected[s], (s==v.length-1)); //fxn(card, index, isLast?)
                 }
             }
             return this;
         }
-        this.forall = function(fxn) {
+        this.forall = function(fxn, thisValue) {
             if(typeof fxn == "function") {
+                thisValue = thisValue || this;
                 for(var i = 0; i < cards.length; i++) {
-                    fxn(cards[i].copy(), i, (selected.indexOf(i) >= 0), (i==cards.length-1)); //fxn(card, index, isSelected?, isLast?)
+                    fxn.call(thisValue, cards[i].copy(), i, (selected.indexOf(i) >= 0), (i==cards.length-1)); //fxn(card, index, isSelected?, isLast?)
                 }
             }
             return this;
