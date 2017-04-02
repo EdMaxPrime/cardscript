@@ -157,6 +157,7 @@
         }
         /*Selectors:
           - true   --> select everything
+          - number --> select that index
           - function(card, index, selected) --> return true to select this card
           - object --> with any of the following properties:
             - index:INT,ARRAY  --> selects cards at this index/indices
@@ -180,6 +181,9 @@
                 selected = [];
                 for(var x in cards)
                     selected.push(parseInt(x));
+            }
+            else if(typeof what == "number") {
+                this.select({index: what});
             }
             else if(typeof what == "object") {
                 what.union = what.union || false;
