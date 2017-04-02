@@ -26,6 +26,16 @@
                 test2_num++;
             });
             console.log(test2_str + " out of " + test2_num);
+            var test3 = cards.decode("3H");
+            console.log("3H --> " + test3.rank.name + " of " + test3.suit.name);
+            test3 = cards.decode("Q Hearts");
+            console.log("Q Hearts --> " + test3.rank.name + " of " + test3.suit.name);
+            test3 = cards.decode("ace S");
+            console.log("ace S --> " + test3.rank.name + " of " + test3.suit.name);
+            test3 = cards.decode("6$");
+            console.log("6$ --> " + test3.rank.name + " of " + test3.suit.name);
+            test3 = cards.decode(" H");
+            console.log(" H --> " + test3.rank.name + " of " + test3.suit.name);
         </script>
     </body>
 </html>

@@ -42,6 +42,55 @@
         ACE: {name: "ace", symbol: "a", value: 1}
     };
     var NULL_RANK = {name:null, symbol:null, value:null};
+    function string2RS(str) {
+        if(typeof str != "string")
+            return {rank:NULL_RANK, suit:NULL_SUIT};
+        if(str.length == 2) {
+            var rs = {};
+            for(var r in ranks) {
+                if(ranks[r].symbol == str.charAt(0).toLowerCase()) {
+                    rs.rank = ranks[r];
+                    break;
+                }
+            }
+            rs.rank = rs.rank || NULL_RANK;
+            for(var s in suits) {
+                if(suits[s].symbol == str.charAt(1).toLowerCase()) {
+                    rs.suit = suits[s];
+                    break;
+                }
+            }
+            rs.suit = rs.suit || NULL_SUIT;
+            return rs;
+        } else if(str.indexOf(" ") != -1) {
+            str = str.split(" ");
+            var rs = {};
+            for(var r in ranks) {
+                if(ranks[r].symbol == str[0].toLowerCase()) {
+                    rs.rank = ranks[r];
+                    break;
+                }
+                else if(ranks[r].name == str[0].toLowerCase()) {
+                    rs.rank = ranks[r];
+                    break;
+                }
+            }
+            rs.rank = rs.rank || NULL_RANK;
+            for(var s in suits) {
+                if(suits[s].symbol == str[1].toLowerCase()) {
+                    rs.suit = suits[s];
+                    break;
+                }
+                else if(suits[s].name == str[1].toLowerCase()) {
+                    rs.suit = suits[s];
+                    break;
+                }
+            }
+            rs.suit = rs.suit || NULL_SUIT;
+            return rs;
+        }
+        return {rank: NULL_RANK, suit: NULL_SUIT};
+    }
     function merge(a, b) {
         var union = {};
         for(var k in a) {
@@ -123,7 +172,7 @@
                     }
                 }
             }
-            if(rank != undefined) {this.id = rank;}
+            if(rank != undefined) {this.id = rank;} //id is 2nd param in this case
         }
         else {
             this.suit = suit;
@@ -503,6 +552,7 @@
         }
     }
     window.cards = {
-        Game: Game
+        Game: Game,
+        decode: string2RS
     };
 })();
