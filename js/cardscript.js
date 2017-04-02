@@ -34,7 +34,7 @@
         SEVEN: {name: "seven", symbol: "7", value: 7},
         EIGHT: {name: "eight", symbol: "8", value: 8},
         NINE: {name: "nine", symbol: "9", value: 9},
-        TEN: {name: "ten", symbol: "10", value: 10},
+        TEN: {name: "ten", symbol: "t", value: 10},
         JACK: {name: "jack", symbol: "j", value: 11},
         QUEEN: {name: "queen", symbol: "q", value: 12},
         KING: {name: "king", symbol: "k", value: 13},
