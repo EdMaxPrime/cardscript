@@ -459,10 +459,14 @@
         }
         /**Expects a string in the form <Rank><Suit> where
            rank and suit are one-character representations
+           OR a card object with desired rank and suit
            @return  the index of the card, or -1 if not found*/
         this.find = function(_card) {
             if(typeof _card == "string" && _card.length == 2) {
                 _card = new Card(_card, -1);
+                return this.find(_card);
+            }
+            else if(_card instanceof Card) {
                 for(var i = 0; i < cards.length; i++) {
                     _card.rank = _card.rank || {symbol:null};
                     _card.suit = _card.suit || {symbol:null};

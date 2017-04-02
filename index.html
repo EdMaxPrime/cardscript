@@ -20,7 +20,7 @@
             var test2 = app.createDeck52();
             var test2_str = "", test2_num = 0;
             test2.select({rank: '9'}).foreach(function(card, index, isLast) {
-                test2_str += card.rank.symbol+"#"+index;
+                test2_str += card.rank.symbol+"#"+index+"#"+test2.find(card);
                 if(!isLast) test2_str += ", ";
             }).forall(function(card, index, selected) {
                 test2_num++;
