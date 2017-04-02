@@ -337,6 +337,23 @@
         this.count = function() {
             return selected.length;
         }
+        this.foreach = function(fxn) {
+            if(typeof fxn == "function") {
+                var v = this.view();
+                for(var s = 0; s < v.length; s++) {
+                    fxn(v[s], selected[s], (s==v.length-1)); //fxn(card, index, isLast?)
+                }
+            }
+            return this;
+        }
+        this.forall = function(fxn) {
+            if(typeof fxn == "function") {
+                for(var i = 0; i < cards.length; i++) {
+                    fxn(cards[i].copy(), i, (selected.indexOf(i) >= 0)); //fxn(card, index, isSelected?)
+                }
+            }
+            return this;
+        }
         this.moveTo = function(destination, method) {
             if(method!="start"&&method!="before"&&method!="after"&&method!="end"&&method!="random")
                 method = "end";

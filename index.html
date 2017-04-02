@@ -18,7 +18,14 @@
             console.log(test.stringify());
             console.log(test.stringSelected());
             var test2 = app.createDeck52();
-            console.log(test2.stringify());
+            var test2_str = "", test2_num = 0;
+            test2.select({rank: '9'}).foreach(function(card, index, isLast) {
+                test2_str += card.rank.symbol+"#"+index;
+                if(!isLast) test2_str += ", ";
+            }).forall(function(card, index, selected) {
+                test2_num++;
+            });
+            console.log(test2_str + " out of " + test2_num);
         </script>
     </body>
 </html>
