@@ -125,12 +125,8 @@
             else if(Array.isArray(list)) {
                 var arrayOfCards = [];
                 for(var i = 0; i < list.length; i++) {
-                    if(typeof list[i] == "string") {
-                        if(list[i].length == 2) {
-                            arrayOfCards.push(new Card(list[i], nextCardID));
-                            nextCardID++;
-                        }
-                    }
+                    arrayOfCards.push(new Card(list[i], nextCardID));
+                    nextCardID++;
                 }
                 return new Pile(arrayOfCards, this);
             }
@@ -158,20 +154,9 @@
     }
     function Card(suit, rank, id) {
         if(arguments.length < 3) { //Card(STRING, id)
-            if(suit.length == 2) {
-                for(var r in ranks) {
-                    if(ranks[r].symbol == suit.charAt(0).toLowerCase()) {
-                        this.rank = ranks[r];
-                        break;
-                    }
-                }
-                for(var s in suits) {
-                    if(suits[s].symbol == suit.charAt(1).toLowerCase()) {
-                        this.suit = suits[s];
-                        break;
-                    }
-                }
-            }
+            var rs = string2RS(arguments[0]);
+            this.rank = rs.rank;
+            this.suit = rs.suit;
             if(rank != undefined) {this.id = rank;} //id is 2nd param in this case
         }
         else {
