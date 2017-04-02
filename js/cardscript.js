@@ -467,9 +467,9 @@
                 return this.find(_card);
             }
             else if(_card instanceof Card) {
+                _card.rank = _card.rank || {symbol:null};
+                _card.suit = _card.suit || {symbol:null};
                 for(var i = 0; i < cards.length; i++) {
-                    _card.rank = _card.rank || {symbol:null};
-                    _card.suit = _card.suit || {symbol:null};
                     if(cards[i].rank.symbol == _card.rank.symbol && cards[i].suit.symbol == _card.suit.symbol) {
                         return i;
                     }
