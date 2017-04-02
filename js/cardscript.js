@@ -25,6 +25,7 @@
             parity: true
         }
     };
+    var NULL_SUIT = {name:null, html:"", symbol:null, parity:null};
     var ranks = {
         TWO: {name: "two", symbol: "2", value: 2},
         THREE: {name: "three", symbol: "3", value: 3},
@@ -40,6 +41,7 @@
         KING: {name: "king", symbol: "k", value: 13},
         ACE: {name: "ace", symbol: "a", value: 1}
     };
+    var NULL_RANK = {name:null, symbol:null, value:null};
     function merge(a, b) {
         var union = {};
         for(var k in a) {
@@ -467,8 +469,8 @@
                 return this.find(_card);
             }
             else if(_card instanceof Card) {
-                _card.rank = _card.rank || {symbol:null};
-                _card.suit = _card.suit || {symbol:null};
+                _card.rank = _card.rank || NULL_RANK;
+                _card.suit = _card.suit || NULL_SUIT;
                 for(var i = 0; i < cards.length; i++) {
                     if(cards[i].rank.symbol == _card.rank.symbol && cards[i].suit.symbol == _card.suit.symbol) {
                         return i;
