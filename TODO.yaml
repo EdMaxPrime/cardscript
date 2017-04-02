@@ -1,0 +1,5 @@
+#todo
+index.html: ""
+cardscript.js:
+  select:
+    -new representations of rank and suit
