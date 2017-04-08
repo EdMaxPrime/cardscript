@@ -396,6 +396,20 @@
             }
             return this;
         }
+        this.tag = function(tags) {
+            if(typeof tags == "string") { //set flag to true
+                var flag = {};
+                flag[tags] = true;
+                this.tag(flag);
+            } else if(typeof tags == "object") {
+                for(var i = 0; i < selected.length; i++) {
+                    for(var key in tags) {
+                        cards[ selected[i] ].tags[key] = tags[key];
+                    }
+                }
+            }
+            return this;
+        }
         this.moveTo = function(destination, method) {
             if(method!="start"&&method!="before"&&method!="after"&&method!="end"&&method!="random")
                 method = "end";
