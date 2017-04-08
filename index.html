@@ -36,6 +36,11 @@
             console.log("6$ --> " + test3.rank.name + " of " + test3.suit.name);
             test3 = cards.decode(" H");
             console.log(" H --> " + test3.rank.name + " of " + test3.suit.name);
+            app.listen("newstack", function(evt) {
+                console.log("triggered");
+            });
+            app.trigger("fake");
+            app.trigger("newstack", {});
         </script>
     </body>
 </html>

@@ -118,6 +118,7 @@
             order: {a:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, t:10, j:11, q:12, k:13}
         }, opts);
         var nextCardID = 0;
+        var listeners = [], events = {};
         this.createPile = function(list) {
             if(list === "" || list == undefined || typeof list != "object") {
                 return new Pile([]);
@@ -151,6 +152,25 @@
                 if(this.settings.order[c1.rank.symbol] > this.settings.order[c2.rank.symbol]) return 1; //c1 > c2
             }
         }
+        this.listen = function(event, callback) {
+            if(typeof event != "string" || typeof callback != "function")
+                throw ("Expected an event name(string) and a callback(function)" +
+                       "instead found "+(typeof event)+" and "+(typeof callback));
+            if(!events.hasOwnProperty(event))
+                events[event] = [];
+            listeners.push(callback);
+            events[event].push(listeners.length-1);
+            return this;
+        }
+        this.trigger = function(event, data) {
+            if(events.hasOwnProperty(event)) {
+                console.log(events);
+                events[event].forEach(function(value) {
+                    listeners[value](data, this);
+                });
+            }
+            return this;
+        }
     }
     function Card(suit, rank, id) {
         if(arguments.length < 3) { //Card(STRING, id)
@@ -170,6 +190,7 @@
             copy.suit = {name:this.suit.name, symbol:this.suit.symbol, html:this.suit.symbol, parity:this.suit.parity};
             copy.rank = {name:this.rank.name, symbol:this.rank.symbol, value:this.rank.value};
             copy.tags = JSON.parse(JSON.stringify(this.tags));
+            copy.id   = this.id;
             return copy;
         }
     }
