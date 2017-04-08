@@ -559,8 +559,14 @@
 })();
 if(window.jQuery) {
 (function($) {
-    $.fn.cardgame = function(options) {
-        //jquery stuff
+    $.fn.cardgame = function(app, options) {
+        $.extend(options, {
+            background: false
+        });
+        if(options.background != false) {
+            this.css("background", options.background);
+        }
+        return this;
     }
     $.fn.cardgame.defaults = {};
 })(jQuery);
