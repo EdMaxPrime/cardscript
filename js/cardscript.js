@@ -557,3 +557,11 @@
         decode: string2RS
     };
 })();
+if(window.jQuery) {
+(function($) {
+    $.fn.cardgame = function(options) {
+        //jquery stuff
+    }
+    $.fn.cardgame.defaults = {};
+})(jQuery);
+}
