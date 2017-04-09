@@ -615,9 +615,22 @@ if(window.jQuery) {
             if(options.piles.hasOwnProperty(evt.name)) {
                 var id = "pile_" + evt.name;
                 table.children().remove("#"+id);
-                var newPile = $('<div id="'+id+'"></div>');
+                var newPile = $('<div id="'+id+'" class="'+(evt.value.isEmpty()? options.classes.pile_empty : options.classes.pile_full)+'"></div>');
+                var newPileX = options.piles[evt.name].x || 20,
+                    newPileY = options.piles[evt.name].y || 0;
+                console.log(newPileX, newPileY);
+                if(newPileX == "left") newPile.css("left", 0);
+                else if(newPileX == "right") newPile.css("right", 0);
+                else if(newPileX == "center") newPile.css({left:0, right:0, marginLeft:"auto", marginRight:"auto"});
+                else newPile.css("left", newPileX);
+                if(newPileY == "top") newPile.css("top", 0);
+                else if(newPileY == "bottom") newPile.css("bottom", 0);
+                else if(newPileY == "center") newPile.css({top:0, bottom:0, marginTop:"auto", marginBottom:"auto"});
+                else newPile.css("top", newPileY);
+                var spreadX = 0, spreadY = 0, c;
                 evt.value.forall(function(_card, _index) {
-                    $(cardHTML(_card, options)).appendTo(newPile);
+                    c = $(cardHTML(_card, options));
+                    c.appendTo(newPile);
                 });
                 table.append(newPile);
             }
