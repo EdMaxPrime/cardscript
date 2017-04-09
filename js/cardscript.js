@@ -583,13 +583,45 @@
 })();
 if(window.jQuery) {
 (function($) {
+    function cardHTML(card, options) {
+        var str = '<div id="$ID" class="$CLASS">' +
+                    '<span class="$CLASS2">$RANK $SUIT</span>' +
+                '</div>';
+        str = str.replace("$ID", "card_"+card.id).replace("$RANK", card.rank.symbol).replace("$SUIT", card.suit.html);
+        str = str.replace("$CLASS2", options.classes.name);
+        str = str.replace("$CLASS", options.classes.card+" "+(card.suit.parity? options.classes.color1 : options.classes.color2)+" "+(card.tags.facedown? options.classes.back : options.classes.front));
+        return str;
+    }
     $.fn.cardgame = function(app, options) {
-        $.extend(options, {
-            background: false
+        $.extend(true, options, {
+            background: false,
+            classes: {
+                card: "card",
+                front: "card-front",
+                back: "card-back",
+                color1: "card-red",
+                color2: "card-black",
+                name: "card-name",
+                pile_full: "pile",
+                pile_empty: "pile"
+            },
+            piles: {}
         });
-        if(options.background != false) {
-            this.css("background", options.background);
-        }
+        if(options.background != false) {this.css("background", options.background);}
+        if(!(app instanceof cards.Game))
+            throw ("Expected a Game instance, instead got " + (typeof app) + " in $().cardgame(Game, options)");
+        var table = this;
+        app.listen("newpile", function(evt) {
+            if(options.piles.hasOwnProperty(evt.name)) {
+                var id = "pile_" + evt.name;
+                table.children().remove("#"+id);
+                var newPile = $('<div id="'+id+'"></div>');
+                evt.value.forall(function(_card, _index) {
+                    $(cardHTML(_card, options)).appendTo(newPile);
+                });
+                table.append(newPile);
+            }
+        });
         return this;
     }
     $.fn.cardgame.defaults = {};

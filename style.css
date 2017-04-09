@@ -7,4 +7,36 @@ body {
     height: 500px;
     margin: 50px auto;
     border: 1px solid #000;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.card {
+    border-radius: 5px;
+    width: 60px;
+    height: 100px;
+    position: absolute;
+}
+.card-front {
+    background-color: white;
+}
+.card-back {
+    background-color: blue;
+}
+.card-red {
+    color: red;
+}
+.card-black {
+    color: black;
+}
+.card-name {
+    display: inline-block;
+}
+.pile {
+    position: absolute;
+    width: 64px;
+    height: 104px;
+    padding: 2px;
+    border: 1px solid black;
 }
