@@ -119,9 +119,11 @@
         }, opts);
         var nextCardID = 0;
         var listeners = [], events = {};
-        this.createPile = function(list) {
+        this.createPile = function(list, name) {
             if(list === "" || list == undefined || typeof list != "object") {
-                return new Pile([]);
+                var theNewOne = new Pile([]);
+                this.trigger("newpile", {name: name, value: theNewOne});
+                return theNewOne;
             }
             else if(Array.isArray(list)) {
                 var arrayOfCards = [];
@@ -129,7 +131,9 @@
                     arrayOfCards.push(new Card(list[i], nextCardID));
                     nextCardID++;
                 }
-                return new Pile(arrayOfCards, this);
+                var theNewOne = new Pile(arrayOfCards, this);
+                this.trigger("newpile", {name: name, value: theNewOne});
+                return theNewOne;
             }
         }
         this.createDeck52 = function() {
@@ -164,7 +168,6 @@
         }
         this.trigger = function(event, data) {
             if(events.hasOwnProperty(event)) {
-                console.log(events);
                 events[event].forEach(function(value) {
                     listeners[value](data, this);
                 });
