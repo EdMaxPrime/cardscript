@@ -8,19 +8,19 @@
         },
         HEARTS: {
             name: "hearts",
-            html: "&heart;",
+            html: "&hearts;",
             symbol: "h",
             parity: true
         },
         CLUBS: {
             name: "clubs",
-            html: "&club;",
+            html: "&clubs;",
             symbol: "c",
             parity: false
         },
         DIAMONDS: {
             name: "clubs",
-            html: "&diam;",
+            html: "&diams;",
             symbol: "d",
             parity: true
         }
@@ -190,7 +190,7 @@
         this.tags = {};
         this.copy = function() {
             var copy = new Card(this.suit, this.rank, this.id);
-            copy.suit = {name:this.suit.name, symbol:this.suit.symbol, html:this.suit.symbol, parity:this.suit.parity};
+            copy.suit = {name:this.suit.name, symbol:this.suit.symbol, html:this.suit.html, parity:this.suit.parity};
             copy.rank = {name:this.rank.name, symbol:this.rank.symbol, value:this.rank.value};
             copy.tags = JSON.parse(JSON.stringify(this.tags));
             copy.id   = this.id;
