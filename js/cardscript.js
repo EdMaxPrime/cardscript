@@ -616,8 +616,10 @@ if(window.jQuery) {
                 var id = "pile_" + evt.name;
                 table.children().remove("#"+id);
                 var newPile = $('<div id="'+id+'" class="'+(evt.value.isEmpty()? options.classes.pile_empty : options.classes.pile_full)+'"></div>');
-                var newPileX = options.piles[evt.name].x || 20,
-                    newPileY = options.piles[evt.name].y || 0;
+                var newPileX = options.piles[evt.name].x || 0,
+                    newPileY = options.piles[evt.name].y || 0,
+                    newPileSX = options.piles[evt.name].spreadx || 0,
+                    newPileSY = options.piles[evt.name].spready || 0;
                 console.log(newPileX, newPileY);
                 if(newPileX == "left") newPile.css("left", 0);
                 else if(newPileX == "right") newPile.css("right", 0);
@@ -630,6 +632,8 @@ if(window.jQuery) {
                 var spreadX = 0, spreadY = 0, c;
                 evt.value.forall(function(_card, _index) {
                     c = $(cardHTML(_card, options));
+                    c.css("left", _index*newPileSX);
+                    c.css("top", _index*newPileSY);
                     c.appendTo(newPile);
                 });
                 table.append(newPile);
