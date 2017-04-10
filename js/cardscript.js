@@ -201,7 +201,8 @@
         var cards = arrayOfCards,
             selected = [],
             self = this,
-            game = owner;
+            game = owner,
+            metadata = {};
         this.size = function() {return cards.length;};
         this.isEmpty = function() {return this.size()==0;};
         var popSelected = function() {
@@ -559,6 +560,13 @@
             }
             return this;
         }
+        this.remember = function(key, value) {
+            if(typeof key == "string" && key != "") {
+                if(arguments.length == 1) return metadata[key];
+                else metadata[key] = value;
+            }
+            return this;
+        }
         this.stringify = function() {
             var str = "[";
             for(var i = 0; i < cards.length; i++) {
@@ -591,6 +599,12 @@ if(window.jQuery) {
         str = str.replace("$CLASS2", options.classes.name);
         str = str.replace("$CLASS", options.classes.card+" "+(card.suit.parity? options.classes.color1 : options.classes.color2)+" "+(card.tags.facedown? options.classes.back : options.classes.front));
         return str;
+    }
+    function calculateCardPosition(pile, index) {
+        return {
+            x: (pile.hasOwnProperty("spreadx")? pile.spreadx*index : 0),
+            y: (pile.hasOwnProperty("spready")? pile.spready*index : 0)
+        };
     }
     $.fn.cardgame = function(app, options) {
         $.extend(true, options, {
