@@ -635,6 +635,7 @@ if(window.jQuery) {
                     newPileSX = options.piles[evt.name].spreadx || 0,
                     newPileSY = options.piles[evt.name].spready || 0;
                 console.log(newPileX, newPileY);
+                evt.value.remember("jquery_name", evt.name);
                 if(newPileX == "left") newPile.css("left", 0);
                 else if(newPileX == "right") newPile.css("right", 0);
                 else if(newPileX == "center") newPile.css({left:0, right:0, marginLeft:"auto", marginRight:"auto"});
