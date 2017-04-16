@@ -3,3 +3,27 @@ index.html: ""
 cardscript.js:
   select:
     -new representations of rank and suit
+
+events:
+  newpile:
+    name: a string
+    value: a Pile
+  remember:
+    pile: the Pile affected
+    key: a string
+    value: the value associated with this key
+  swap:
+    pile: the Pile
+    index1: one of the swapped indices
+    card1: the card that used to be at index1
+    index2: the other swapped index
+    card2: the card that used to be at index2
+  move:
+    origin: starting Pile
+    destination: the Pile where cards are being moved tp
+  remove:
+    origin: the Pile that used to have these cards
+    which: an array of indices
+  add:
+    destination: the Pile that is recieving these cards
+    which: not sure
