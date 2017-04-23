@@ -528,6 +528,10 @@
                 }
             }
             if(which.length >= 2) {
+                game.trigger("swap", {
+                    pile: this, index1: which[0], card1: cards[which[0]].copy(),
+                    index2: which[1], card2: cards[which[1]].copy()
+                });
                 var temp = cards[which[0]];
                 cards[which[0]] = cards[which[1]];
                 cards[which[1]] = temp;
@@ -731,6 +735,27 @@ if(window.jQuery) {
                     }, 1500);
                 });
             }
+        });
+        app.listen("swap", function(evt) {
+            var pileName = evt.pile.remember("jquery_name");
+            if(!options.piles.hasOwnProperty(pileName)) return;
+            var pileDiv = $('#'+pileID(app, pileName));
+            var card1 = pileDiv.children(":nth-child("+(evt.index1+1)+")");
+            var card2 = pileDiv.children(":nth-child("+(evt.index2+1)+")");
+            //slide them into position
+            card1.animate({
+                left: calculateCardPosition(options.piles[pileName], evt.index2).x,
+                top: calculateCardPosition(options.piles[pileName], evt.index2).y
+            });
+            card2.animate({
+                left: calculateCardPosition(options.piles[pileName], evt.index1).x,
+                top: calculateCardPosition(options.piles[pileName], evt.index1).y
+            });
+            //fix card order in the DOM
+            if(evt.index1 == 0) card2.insertBefore(pileDiv.children(":nth-child(1)"));
+            else if(evt.index1 > 0) card2.insertAfter(pileDiv.children(":nth-child("+(evt.index1+1)+")"));
+            if(evt.index2 == 0) card1.insertBefore(pileDiv.children(":nth-child(1)"));
+            else if(evt.index2 > 0) card1.insertAfter(pileDiv.children(":nth-child("+(evt.index2+1)+")"));
         });
         return this;
     }
