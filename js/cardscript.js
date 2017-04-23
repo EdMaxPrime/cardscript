@@ -669,6 +669,9 @@ if(window.jQuery) {
             position.x += $('#'+pileID(app, pileName)).position().left;
             position.y += $('#'+pileID(app, pileName)).position().top;
             $('#'+cardID(app, evt.card)).appendTo(table).css({left: position.x, top: position.y});
+            if(options.piles[pileName].destination == undefined) {
+                $('#'+cardID(app, evt.card)).remove();
+            }
         });
         return this;
     }
