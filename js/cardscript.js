@@ -114,6 +114,7 @@
     function Game(opts) {
         this.settings = merge({
             players: 1,
+            name: "",
             rules: {a: "lol"},
             order: {a:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, t:10, j:11, q:12, k:13}
         }, opts);
@@ -210,8 +211,10 @@
             for(var i = 0; i < cards.length; i++) {
                 if(selected.indexOf(i) == -1)
                     staysHere.push(cards[i]);
-                else
+                else {
                     removed.push(cards[i]);
+                    game.trigger("remove", {origin: self, index: i, card: cards[i].copy()});
+                }
             }
             cards = staysHere;
             return removed;
@@ -595,11 +598,13 @@ if(window.jQuery) {
         var str = '<div id="$ID" class="$CLASS">' +
                     '<span class="$CLASS2">$RANK $SUIT</span>' +
                 '</div>';
-        str = str.replace("$ID", "card_"+card.id).replace("$RANK", card.rank.symbol).replace("$SUIT", card.suit.html);
+        str = str.replace("$ID", cardID(options.app, card)).replace("$RANK", card.rank.symbol).replace("$SUIT", card.suit.html);
         str = str.replace("$CLASS2", options.classes.name);
         str = str.replace("$CLASS", options.classes.card+" "+(card.suit.parity? options.classes.color1 : options.classes.color2)+" "+(card.tags.facedown? options.classes.back : options.classes.front));
         return str;
     }
+    function cardID(game, card) {return game.settings.name + "_card_" + card.id;}
+    function pileID(game, pilename) {return game.settings.name + "_pile_" + pilename;}
     function calculateCardPosition(pile, index) {
         return {
             x: (pile.hasOwnProperty("spreadx")? pile.spreadx*index : 0),
@@ -624,10 +629,11 @@ if(window.jQuery) {
         if(options.background != false) {this.css("background", options.background);}
         if(!(app instanceof cards.Game))
             throw ("Expected a Game instance, instead got " + (typeof app) + " in $().cardgame(Game, options)");
+        else options.app = app;
         var table = this;
         app.listen("newpile", function(evt) {
             if(options.piles.hasOwnProperty(evt.name)) {
-                var id = "pile_" + evt.name;
+                var id = pileID(app, evt.name);
                 table.children().remove("#"+id);
                 var newPile = $('<div id="'+id+'" class="'+(evt.value.isEmpty()? options.classes.pile_empty : options.classes.pile_full)+'"></div>');
                 var newPileX = options.piles[evt.name].x || 0,
