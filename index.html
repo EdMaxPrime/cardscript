@@ -10,7 +10,7 @@
         <script type="text/javascript" src="js/cardscript.js"></script>
         <script type="text/javascript">
             var app = new cards.Game();
-            var test = app.createPile(["2H", "3D", "KS", "AC", "KD"]);
+            /*var test = app.createPile(["2H", "3D", "KS", "AC", "KD"]);
             console.log(test.stringify());
             test.select(1);
             console.log(test.stringSelected());
@@ -35,7 +35,7 @@
             test3 = cards.decode("6$");
             console.log("6$ --> " + test3.rank.name + " of " + test3.suit.name);
             test3 = cards.decode(" H");
-            console.log(" H --> " + test3.rank.name + " of " + test3.suit.name);
+            console.log(" H --> " + test3.rank.name + " of " + test3.suit.name);*/
             $("#container").cardgame(app, {
                 background: "green",
                 piles: {
@@ -43,6 +43,7 @@
                 }
             });
             var test4 = app.createPile(['JH', '3S', 'TD'], "meow");
+            test4.select(0).remove();
         </script>
     </body>
 </html>

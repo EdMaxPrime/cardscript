@@ -644,11 +644,13 @@ if(window.jQuery) {
                 evt.value.remember("jquery_name", evt.name);
                 if(newPileX == "left") newPile.css("left", 0);
                 else if(newPileX == "right") newPile.css("right", 0);
-                else if(newPileX == "center") newPile.css({left:0, right:0, marginLeft:"auto", marginRight:"auto"});
+                else if(newPileX == "centered") newPile.css({left:0, right:0, marginLeft:"auto", marginRight:"auto"});
+                else if(newPileX == "center") newPile.css({left: (table.width() - newPile.width()) / 2});
                 else newPile.css("left", newPileX);
                 if(newPileY == "top") newPile.css("top", 0);
                 else if(newPileY == "bottom") newPile.css("bottom", 0);
-                else if(newPileY == "center") newPile.css({top:0, bottom:0, marginTop:"auto", marginBottom:"auto"});
+                else if(newPileY == "centered") newPile.css({top:0, bottom:0, marginTop:"auto", marginBottom:"auto"});
+                else if(newPileY == "center") newPile.css({top: (table.height() - newPile.height()) / 2});
                 else newPile.css("top", newPileY);
                 var spreadX = 0, spreadY = 0, c;
                 evt.value.forall(function(_card, _index) {
@@ -659,6 +661,14 @@ if(window.jQuery) {
                 });
                 table.append(newPile);
             }
+        });
+        app.listen("remove", function(evt) {
+            if(!options.piles.hasOwnProperty(evt.origin.remember("jquery_name"))) return;
+            var pileName = evt.origin.remember("jquery_name");
+            var position = calculateCardPosition(options.piles[pileName], evt.index);
+            position.x += $('#'+pileID(app, pileName)).position().left;
+            position.y += $('#'+pileID(app, pileName)).position().top;
+            $('#'+cardID(app, evt.card)).appendTo(table).css({left: position.x, top: position.y});
         });
         return this;
     }
