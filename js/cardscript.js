@@ -678,6 +678,12 @@ if(window.jQuery) {
             removed.appendTo(table).css({left: position.x, top: position.y});
             if(options.piles[pileName].destination == undefined) {
                 removed.remove();
+            } else {
+                var destinationPileDiv = $('#'+pileID(app, options.piles[pileName].destination));
+                removed.animate({
+                    top: destinationPileDiv.position().top,
+                    left: destinationPileDiv.position().left
+                }, 2000);
             }
         });
         return this;

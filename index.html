@@ -39,10 +39,12 @@
             $("#container").cardgame(app, {
                 background: "green",
                 piles: {
-                    meow: {x: "center", y:"bottom", spreadx:30, spready:-20}
+                    meow: {x: "center", y:"bottom", spreadx:30, spready:-20, destination: "hand"},
+                    hand: {x: "center", y:"top", spreadx:30}
                 }
             });
             var test4 = app.createPile(['JH', '3S', 'TD'], "meow");
+            var test5 = app.createPile(['7C', 'kC', 'AC'], "hand");
             test4.select(0).remove();
         </script>
     </body>
