@@ -22,8 +22,15 @@ events:
     origin: starting Pile
     destination: the Pile where cards are being moved tp
   remove:
-    origin: the Pile that used to have these cards
-    which: an array of indices
+    origin: the Pile that used to have this card
+    index: the index of the card being removed
+    card: a copy of the Card
+    ideas: 
+      -invoked during popSelected in the loop
+      -jquery responds by moving card DIV up one level
   add:
-    destination: the Pile that is recieving these cards
-    which: not sure
+    destination: the Pile that is recieving this card
+    index: the index where the new card will be inserted
+    card: a copy of the Card
+    ideas: 
+      -invoked by add method
