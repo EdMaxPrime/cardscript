@@ -34,3 +34,12 @@ events:
     card: a copy of the Card
     ideas: 
       -invoked by add method
+  choose_pile: 
+    callback: "a function that will be called as soon as a pile is clicked on, will receive the chosen pile name"
+    ideas:
+      -user should be able to click on pile or any of its cards
+  choose_card:
+    choices: an array of card objects to choose from
+    callback: "a function that will be called when a card is chosen, will recieve the card ID"
+    ideas:
+      -use the .one() method
