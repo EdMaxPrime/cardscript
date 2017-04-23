@@ -577,7 +577,9 @@
         this.remember = function(key, value) {
             if(typeof key == "string" && key != "") {
                 if(arguments.length == 1) return metadata[key];
-                else metadata[key] = value;
+                else {
+                    metadata[key] = value;
+                    game.trigger("remember", {pile: this, key: key, value: value});
             }
             return this;
         }
@@ -756,6 +758,18 @@ if(window.jQuery) {
             else if(evt.index1 > 0) card2.insertAfter(pileDiv.children(":nth-child("+(evt.index1+1)+")"));
             if(evt.index2 == 0) card1.insertBefore(pileDiv.children(":nth-child(1)"));
             else if(evt.index2 > 0) card1.insertAfter(pileDiv.children(":nth-child("+(evt.index2+1)+")"));
+        });
+        app.listen("remember", function(evt) {
+            if(evt.key == "jquery_name") {
+                if(!options.piles.hasOwnProperty(evt.value)) {
+                    options.piles[evt.value] = {
+                        x: 0,
+                        y: 0,
+                        spreadx: 0,
+                        spready: 0
+                    };
+                }
+            }
         });
         return this;
     }
