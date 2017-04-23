@@ -668,9 +668,16 @@ if(window.jQuery) {
             var position = calculateCardPosition(options.piles[pileName], evt.index);
             position.x += $('#'+pileID(app, pileName)).position().left;
             position.y += $('#'+pileID(app, pileName)).position().top;
-            $('#'+cardID(app, evt.card)).appendTo(table).css({left: position.x, top: position.y});
+            var removed = $('#'+cardID(app, evt.card));
+            $('#'+cardID(app, evt.card)+" ~ *").each(function(index, elem) {
+                $(elem).animate({
+                    left: calculateCardPosition(options.piles[pileName], removed.index()+index).x,
+                    top: calculateCardPosition(options.piles[pileName], removed.index()+index).y
+                }, 1000);
+            });
+            removed.appendTo(table).css({left: position.x, top: position.y});
             if(options.piles[pileName].destination == undefined) {
-                $('#'+cardID(app, evt.card)).remove();
+                removed.remove();
             }
         });
         return this;
