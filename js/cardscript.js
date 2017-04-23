@@ -442,6 +442,8 @@
             if(method!="start"&&method!="before"&&method!="after"&&method!="end"&&method!="random")
                 method = "end";
             if(destination instanceof Pile) {
+                //trigger move event
+                game.trigger("move", {origin: this, destination: destination});
                 //pop selected cards
                 var notMine = popSelected();
                 //add cards to destination
@@ -478,6 +480,8 @@
                 }
                 //unselect everything
                 this.select();
+                //end move event
+                game.trigger("endmove", {origin: this});
             } else {
                 throw ("Expected a Pile, instead got " + destination + "\n  in Pile.moveTo(Pile, String)");
             }
@@ -685,6 +689,15 @@ if(window.jQuery) {
                     left: destinationPileDiv.position().left
                 }, 2000);
             }
+        });
+        app.listen("move", function(evt) {
+            var oname = evt.origin.remember("jquery_name"), dname = evt.destination.remember("jquery_name");
+            if(!options.piles.hasOwnProperty(oname) || !options.piles.hasOwnProperty(dname)) return;
+            options.piles[oname].destination = dname;
+        });
+        app.listen("endmove", function(evt) {
+            if(!options.piles.hasOwnProperty(evt.origin.remember("jquery_name"))) return;
+            options.piles[evt.origin.remember("jquery_name")].destination = "";
         });
         return this;
     }
