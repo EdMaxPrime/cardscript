@@ -496,7 +496,10 @@
             if(Array.isArray(arrayOfCards)) {
                 for(var i = 0; i < arrayOfCards.length; ) {
                     if(!(arrayOfCards[i] instanceof Card)) arrayOfCards.splice(i, 1);
-                    else i++;
+                    else {
+                        i++;
+                        game.trigger("add", {destination: this, index: where + i - 1, card: arrayOfCards[i-1].copy()});
+                    }
                 }
                 arrayOfCards.unshift(0); //dont delete
                 arrayOfCards.unshift(where); //start at $where
@@ -673,7 +676,8 @@ if(window.jQuery) {
             position.x += $('#'+pileID(app, pileName)).position().left;
             position.y += $('#'+pileID(app, pileName)).position().top;
             var removed = $('#'+cardID(app, evt.card));
-            $('#'+cardID(app, evt.card)+" ~ *").each(function(index, elem) {
+            //move the other cards up 1 space
+            removed.nextAll().each(function(index, elem) {
                 $(elem).animate({
                     left: calculateCardPosition(options.piles[pileName], removed.index()+index).x,
                     top: calculateCardPosition(options.piles[pileName], removed.index()+index).y
@@ -681,13 +685,19 @@ if(window.jQuery) {
             });
             removed.appendTo(table).css({left: position.x, top: position.y});
             if(options.piles[pileName].destination == undefined) {
-                removed.remove();
+                removed.remove(); //delete it
             } else {
+                //add this card DIV to the destination pile DIV
                 var destinationPileDiv = $('#'+pileID(app, options.piles[pileName].destination));
-                removed.animate({
+                removed.css({
+                    left: removed.position().left - destinationPileDiv.position().left,
+                    top:  removed.position().top - destinationPileDiv.position().top
+                });
+                removed.appendTo(destinationPileDiv);
+                /*removed.animate({
                     top: destinationPileDiv.position().top,
                     left: destinationPileDiv.position().left
-                }, 2000);
+                }, 2000);*/
             }
         });
         app.listen("move", function(evt) {
@@ -698,6 +708,29 @@ if(window.jQuery) {
         app.listen("endmove", function(evt) {
             if(!options.piles.hasOwnProperty(evt.origin.remember("jquery_name"))) return;
             options.piles[evt.origin.remember("jquery_name")].destination = "";
+        });
+        app.listen("add", function(evt) {
+            var dname = evt.destination.remember("jquery_name");
+            if(!options.piles.hasOwnProperty(dname)) return;
+            var added = $('#'+cardID(app, evt.card));
+            var dest = $('#'+pileID(app, dname));
+            if(added.is(dest.children())) {
+                //put the card DIV in the right spot as a child of the pile DIV
+                if(evt.index != 0) added.insertAfter(dest.children(":nth-child("+evt.index+")"));
+                else added.insertBefore(dest.children(":nth-child(1)"));
+                //slide this card into position
+                added.animate({
+                    left: calculateCardPosition(options.piles[dname], evt.index).x,
+                    top: calculateCardPosition(options.piles[dname], evt.index).y
+                }, 1500);
+                //move the other cards down 1 space
+                added.nextAll().each(function(index, elem) {
+                    $(elem).animate({
+                        left: calculateCardPosition(options.piles[dname], evt.index+index+1).x,
+                        top: calculateCardPosition(options.piles[dname], evt.index+index+1).y
+                    }, 1500);
+                });
+            }
         });
         return this;
     }
