@@ -35,6 +35,7 @@ events:
     ideas: 
       -invoked by add method
   choose_pile: 
+    choices: an array of Pile objects or their jquery_name String
     callback: "a function that will be called as soon as a pile is clicked on, will receive the chosen pile name"
     ideas:
       -user should be able to click on pile or any of its cards

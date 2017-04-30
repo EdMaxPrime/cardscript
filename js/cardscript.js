@@ -680,32 +680,41 @@ if(window.jQuery) {
             if(!options.piles.hasOwnProperty(evt.origin.remember("jquery_name"))) return;
             var pileName = evt.origin.remember("jquery_name");
             var position = calculateCardPosition(options.piles[pileName], evt.index);
-            position.x += $('#'+pileID(app, pileName)).position().left;
-            position.y += $('#'+pileID(app, pileName)).position().top;
+            var pile = $('#'+pileID(app, pileName));
+            position.x += pile.position().left;
+            position.y += pile.position().top;
             var removed = $('#'+cardID(app, evt.card));
-            //move the other cards up 1 space
-            removed.nextAll().each(function(index, elem) {
-                $(elem).animate({
-                    left: calculateCardPosition(options.piles[pileName], removed.index()+index).x,
-                    top: calculateCardPosition(options.piles[pileName], removed.index()+index).y
-                }, 1000);
-            });
-            removed.appendTo(table).css({left: position.x, top: position.y});
-            if(options.piles[pileName].destination == undefined) {
-                removed.remove(); //delete it
-            } else {
-                //add this card DIV to the destination pile DIV
-                var destinationPileDiv = $('#'+pileID(app, options.piles[pileName].destination));
-                removed.css({
-                    left: removed.position().left - destinationPileDiv.position().left,
-                    top:  removed.position().top - destinationPileDiv.position().top
+            var destinationName = options.piles[pileName].destination;
+            table.queue(function(dequeue) {
+                //if no animation happens, this will cause dequeue() to be called immediately
+                var numberOfCardsMoving = removed.nextAll().length;
+                //move the other cards up 1 space
+                removed.nextAll().each(function(index, elem) {
+                    animationHappened = true;
+                    $(elem).animate({
+                        left: calculateCardPosition(options.piles[pileName], removed.index()+index).x,
+                        top: calculateCardPosition(options.piles[pileName], removed.index()+index).y
+                    }, 1000, function() {
+                        if(index == numberOfCardsMoving-1) dequeue();
+                    });
                 });
-                removed.appendTo(destinationPileDiv);
-                /*removed.animate({
-                    top: destinationPileDiv.position().top,
-                    left: destinationPileDiv.position().left
-                }, 2000);*/
-            }
+                if(numberOfCardsMoving == 0) dequeue();
+            });
+            table.queue(function(dequeue) {
+                removed.appendTo(table).css({left: position.x, top: position.y});
+                if(destinationName == undefined || destinationName == "") {
+                    removed.remove(); //delete it
+                } else {
+                    //add this card DIV to the destination pile DIV
+                    var destinationPileDiv = $('#'+pileID(app, destinationName));
+                    removed.css({
+                        left: removed.position().left - destinationPileDiv.position().left,
+                        top:  removed.position().top - destinationPileDiv.position().top
+                    });
+                    removed.appendTo(destinationPileDiv);
+                }
+                dequeue();
+            });
         });
         app.listen("move", function(evt) {
             var oname = evt.origin.remember("jquery_name"), dname = evt.destination.remember("jquery_name");
@@ -721,23 +730,31 @@ if(window.jQuery) {
             if(!options.piles.hasOwnProperty(dname)) return;
             var added = $('#'+cardID(app, evt.card));
             var dest = $('#'+pileID(app, dname));
-            if(added.is(dest.children())) {
-                //put the card DIV in the right spot as a child of the pile DIV
-                if(evt.index != 0) added.insertAfter(dest.children(":nth-child("+evt.index+")"));
-                else added.insertBefore(dest.children(":nth-child(1)"));
-                //slide this card into position
-                added.animate({
-                    left: calculateCardPosition(options.piles[dname], evt.index).x,
-                    top: calculateCardPosition(options.piles[dname], evt.index).y
-                }, 1500);
-                //move the other cards down 1 space
-                added.nextAll().each(function(index, elem) {
-                    $(elem).animate({
-                        left: calculateCardPosition(options.piles[dname], evt.index+index+1).x,
-                        top: calculateCardPosition(options.piles[dname], evt.index+index+1).y
+            table.queue(function(dequeue) {
+                if(added.is(dest.children())) {
+                    //put the card DIV in the right spot as a child of the pile DIV
+                    if(evt.index != 0) added.insertAfter(dest.children(":nth-child("+evt.index+")"));
+                    else added.insertBefore(dest.children(":nth-child(1)"));
+                    //slide this card into position
+                    added.animate({
+                        left: calculateCardPosition(options.piles[dname], evt.index).x,
+                        top: calculateCardPosition(options.piles[dname], evt.index).y
                     }, 1500);
-                });
-            }
+                    //tells us when dequeue() should be called
+                    var animationHappened = added.nextAll().length;
+                    //move the other cards down 1 space
+                    added.nextAll().each(function(index, elem) {
+                        $(elem).animate({
+                            left: calculateCardPosition(options.piles[dname], evt.index+index+1).x,
+                            top: calculateCardPosition(options.piles[dname], evt.index+index+1).y
+                        }, 1500, function() {
+                            if(index == animationHappened-1) dequeue();
+                        });
+                    });
+                    if(animationHappened == 0) dequeue();
+                }
+            });
+            
         });
         app.listen("swap", function(evt) {
             var pileName = evt.pile.remember("jquery_name");
