@@ -44,3 +44,23 @@ events:
     callback: "a function that will be called when a card is chosen, will recieve the card ID"
     ideas:
       -use the .one() method
+
+pluginPileWrapper:
+  x:
+    desc: a number indicating distance from left edge of table
+    default: 0
+  y:
+    desc: a number indicating distance from top edge of table
+    default: 0
+  spreadx: 
+    desc: distance between left edges of cards
+    default: 0
+  spreadY: 
+    desc: distance between top edges of cards
+    default: 0
+  destination: 
+    desc: INTERNAL name of pile that cards are being moved to; empty when not moving
+    default: empty string or undefined
+  pile: 
+    desc: a Pile object that is passed as an argument to event callbacks
+    default: null
