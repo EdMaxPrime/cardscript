@@ -580,6 +580,7 @@
                 else {
                     metadata[key] = value;
                     game.trigger("remember", {pile: this, key: key, value: value});
+                }
             }
             return this;
         }
