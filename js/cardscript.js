@@ -760,22 +760,32 @@ if(window.jQuery) {
             var pileName = evt.pile.remember("jquery_name");
             if(!options.piles.hasOwnProperty(pileName)) return;
             var pileDiv = $('#'+pileID(app, pileName));
-            var card1 = pileDiv.children(":nth-child("+(evt.index1+1)+")");
-            var card2 = pileDiv.children(":nth-child("+(evt.index2+1)+")");
-            //slide them into position
-            card1.animate({
-                left: calculateCardPosition(options.piles[pileName], evt.index2).x,
-                top: calculateCardPosition(options.piles[pileName], evt.index2).y
+            table.queue(function(dequeue) {
+                var card1 = pileDiv.children(":nth-child("+(evt.index1+1)+")");
+                var card2 = pileDiv.children(":nth-child("+(evt.index2+1)+")");
+                //used to make sure both animations finish at the same time
+                var finished = false;
+                //slide them into position
+                card1.animate({
+                    left: calculateCardPosition(options.piles[pileName], evt.index2).x,
+                    top: calculateCardPosition(options.piles[pileName], evt.index2).y
+                }, function() {
+                    if(finished == false) finished = true;
+                    else dequeue();
+                });
+                card2.animate({
+                    left: calculateCardPosition(options.piles[pileName], evt.index1).x,
+                    top: calculateCardPosition(options.piles[pileName], evt.index1).y
+                }, function() {
+                    if(finished == false) finished = true;
+                    else dequeue();
+                });
+                //fix card order in the DOM
+                if(evt.index1 == 0) card2.insertBefore(pileDiv.children(":nth-child(1)"));
+                else if(evt.index1 > 0) card2.insertAfter(pileDiv.children(":nth-child("+(evt.index1+1)+")"));
+                if(evt.index2 == 0) card1.insertBefore(pileDiv.children(":nth-child(1)"));
+                else if(evt.index2 > 0) card1.insertAfter(pileDiv.children(":nth-child("+(evt.index2+1)+")"));
             });
-            card2.animate({
-                left: calculateCardPosition(options.piles[pileName], evt.index1).x,
-                top: calculateCardPosition(options.piles[pileName], evt.index1).y
-            });
-            //fix card order in the DOM
-            if(evt.index1 == 0) card2.insertBefore(pileDiv.children(":nth-child(1)"));
-            else if(evt.index1 > 0) card2.insertAfter(pileDiv.children(":nth-child("+(evt.index1+1)+")"));
-            if(evt.index2 == 0) card1.insertBefore(pileDiv.children(":nth-child(1)"));
-            else if(evt.index2 > 0) card1.insertAfter(pileDiv.children(":nth-child("+(evt.index2+1)+")"));
         });
         app.listen("remember", function(evt) {
             if(evt.key == "jquery_name") {
