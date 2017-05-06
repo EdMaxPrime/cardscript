@@ -794,7 +794,11 @@ if(window.jQuery) {
                         x: 0,
                         y: 0,
                         spreadx: 0,
-                        spready: 0
+                        spready: 0,
+                        pile: evt.pile,
+                        swapTime: "short",
+                        moveTime: 1500,
+                        shiftTime: 1500
                     };
                 }
             }

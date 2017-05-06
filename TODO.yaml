@@ -64,3 +64,13 @@ pluginPileWrapper:
   pile: 
     desc: a Pile object that is passed as an argument to event callbacks
     default: null
+  swapTime:
+    desc: a jquery duration that is used for animating internal movements of cards
+    default: "short"
+  moveTime:
+    type: either a single jquery time or an object with properties whose names are String names of piles and whose values are jquery times
+    desc: the duration of an animation that moves cards
+    default: 1500
+  shiftTime:
+    type: either a single jquery time or an object with two keys (remove/add) that have jquery times as values
+    desc: the time it takes to shift cards when an insertion or deletion is made in the pile
