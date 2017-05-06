@@ -625,21 +625,21 @@ if(window.jQuery) {
             y: (pile.hasOwnProperty("spready")? pile.spready*index : 0)
         };
     }
-    function getProperty(property, wrapper) {
+    function getProperty(property, wrapper, defaults) {
         if(property == "swap-time") {
             if(typeof wrapper.swapTime == "number" || typeof wrapper.swapTime == "string") return wrapper.swapTime;
-            return "short";
+            return defaults.swapTime;
         } else if(property == "move-time") {
             if(typeof wrapper.moveTime == "number" || typeof wrapper.moveTime == "string") return wrapper.moveTime;
-            return 1500;
+            return defaults.moveTime;
         } else if(property == "shift-add-time") {
             if(typeof wrapper.shiftTime == "object" && (typeof wrapper.shiftTime.add == "number" || typeof wrapper.shiftTime.add == "string")) return wrapper.shiftTime.add;
             else if(typeof wrapper.shiftTime == "number" || typeof wrapper.shiftTime == "string") return wrapper.shiftTime;
-            return 1500;
+            return defaults.shiftTime.add;
         } else if(property == "shift-rmv-time") {
             if(typeof wrapper.shiftTime == "object" && (typeof wrapper.shiftTime.remove == "number" || typeof wrapper.shiftTime.remove == "string")) return wrapper.shiftTime.remove;
             else if(typeof wrapper.shiftTime == "number" || typeof wrapper.shiftTime == "string") return wrapper.shiftTime;
-            return 1500;
+            return defaults.shiftTime.remove;
         } else if(property == "pile") {
             return wrapper.pile || null;
         }
@@ -662,6 +662,9 @@ if(window.jQuery) {
     $.fn.cardgame = function(app, options) {
         $.extend(true, options, {
             background: false,
+            swapTime: "short",
+            moveTime: 1500,
+            shiftTime: {add: 1500, remove: 1500},
             classes: {
                 card: "card",
                 front: "card-front",
@@ -730,7 +733,7 @@ if(window.jQuery) {
                     $(elem).animate({
                         left: calculateCardPosition(options.piles[pileName], removed.index()+index).x,
                         top: calculateCardPosition(options.piles[pileName], removed.index()+index).y
-                    }, getProperty("shift-rmv-time", options.piles[pileName]), function() {
+                    }, getProperty("shift-rmv-time", options.piles[pileName], options), function() {
                         if(index == numberOfCardsMoving-1) dequeue();
                     });
                 });
@@ -775,7 +778,7 @@ if(window.jQuery) {
                     added.animate({
                         left: calculateCardPosition(options.piles[dname], evt.index).x,
                         top: calculateCardPosition(options.piles[dname], evt.index).y
-                    }, getProperty("move-time", options.piles[dname]));
+                    }, getProperty("move-time", options.piles[dname], options));
                     //tells us when dequeue() should be called
                     var animationHappened = added.nextAll().length;
                     //move the other cards down 1 space
@@ -783,7 +786,7 @@ if(window.jQuery) {
                         $(elem).animate({
                             left: calculateCardPosition(options.piles[dname], evt.index+index+1).x,
                             top: calculateCardPosition(options.piles[dname], evt.index+index+1).y
-                        }, getProperty("shift-add-time", options.piles[dname]), function() {
+                        }, getProperty("shift-add-time", options.piles[dname], options), function() {
                             if(index == animationHappened-1) dequeue();
                         });
                     });
@@ -805,14 +808,14 @@ if(window.jQuery) {
                 card1.animate({
                     left: calculateCardPosition(options.piles[pileName], evt.index2).x,
                     top: calculateCardPosition(options.piles[pileName], evt.index2).y
-                }, getProperty("swap-time", options.piles[pileName]), function() {
+                }, getProperty("swap-time", options.piles[pileName], options), function() {
                     if(finished == false) finished = true;
                     else dequeue();
                 });
                 card2.animate({
                     left: calculateCardPosition(options.piles[pileName], evt.index1).x,
                     top: calculateCardPosition(options.piles[pileName], evt.index1).y
-                }, getProperty("swap-time", options.piles[pileName]), function() {
+                }, getProperty("swap-time", options.piles[pileName], options), function() {
                     if(finished == false) finished = true;
                     else dequeue();
                 });
