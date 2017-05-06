@@ -644,16 +644,20 @@ if(window.jQuery) {
             return wrapper.pile || null;
         }
     }
-    function clickEvent(event) {
+    function cardClickEvent(event) {
         var currentPile = $(this).parent().attr("id").split("_")[2];
         if(event.data.piles.hasOwnProperty(currentPile)) {
-            console.log(event.data.piles[currentPile]);
             event.data.app.trigger("choose", {
                 card: event.data.card,
                 pile: event.data.piles[currentPile].pile
             });
         }
-        console.log(currentPile);
+    }
+    function pileClickEvent(event) {
+        event.data.app.trigger("choose_pile", {
+            pile: event.data.wrapper.pile,
+            wrapper: event.data.wrapper
+        });
     }
     $.fn.cardgame = function(app, options) {
         $.extend(true, options, {
@@ -702,9 +706,10 @@ if(window.jQuery) {
                     c.css("left", _index*newPileSX);
                     c.css("top", _index*newPileSY);
                     c.appendTo(newPile);
-                    c.on("click", {app: app, card: _card, piles: options.piles}, clickEvent);
+                    c.on("click", {app: app, card: _card, piles: options.piles}, cardClickEvent);
                 });
                 table.append(newPile);
+                newPile.on("click", {app: app, wrapper: options.piles[evt.name]}, pileClickEvent);
             }
         });
         app.listen("remove", function(evt) {
