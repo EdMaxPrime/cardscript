@@ -45,11 +45,15 @@
             });
             var test4 = app.createPile(['JH', '3S', 'TD'], "meow");
             var test5 = app.createPile(['7C', 'kC', 'AC'], "hand");
-            test4.swap(0, 2);
-            test4.select({index:[0]}).moveTo(test5, "start");
-            test4.swap(0, 1);
-            app.listen("choose_pile", function(data) {
-                console.log(data);
+            //test4.swap(0, 2);
+            //test4.select({index:[0]}).moveTo(test5, "start");
+            //test4.swap(0, 1);
+            app.listen("choose", function(data) {
+                if(data.pile == test4) {
+                    test4.select(test4.find(data.card)).moveTo(test5);
+                } else {
+                    test5.select(test5.find(data.card)).moveTo(test4);
+                }
             });
         </script>
     </body>
