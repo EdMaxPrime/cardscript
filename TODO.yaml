@@ -44,6 +44,9 @@ events:
     callback: "a function that will be called when a card is chosen, will recieve the card ID"
     ideas:
       -use the .one() method
+  choose:
+    card: the Card Object that was selected
+    pile: the Pile Object to which this card belongs
 
 pluginPileWrapper:
   x:

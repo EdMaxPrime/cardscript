@@ -644,6 +644,17 @@ if(window.jQuery) {
             return wrapper.pile || null;
         }
     }
+    function clickEvent(event) {
+        var currentPile = $(this).parent().attr("id").split("_")[2];
+        if(event.data.piles.hasOwnProperty(currentPile)) {
+            console.log(event.data.piles[currentPile]);
+            event.data.app.trigger("choose", {
+                card: event.data.card,
+                pile: event.data.piles[currentPile].pile
+            });
+        }
+        console.log(currentPile);
+    }
     $.fn.cardgame = function(app, options) {
         $.extend(true, options, {
             background: false,
@@ -675,6 +686,7 @@ if(window.jQuery) {
                     newPileSY = options.piles[evt.name].spready || 0;
                 console.log(newPileX, newPileY);
                 evt.value.remember("jquery_name", evt.name);
+                options.piles[evt.name].pile = evt.value;
                 if(newPileX == "left") newPile.css("left", 0);
                 else if(newPileX == "right") newPile.css("right", 0);
                 else if(newPileX == "centered") newPile.css({left:0, right:0, marginLeft:"auto", marginRight:"auto"});
@@ -685,12 +697,12 @@ if(window.jQuery) {
                 else if(newPileY == "centered") newPile.css({top:0, bottom:0, marginTop:"auto", marginBottom:"auto"});
                 else if(newPileY == "center") newPile.css({top: (table.height() - newPile.height()) / 2});
                 else newPile.css("top", newPileY);
-                var spreadX = 0, spreadY = 0, c;
                 evt.value.forall(function(_card, _index) {
                     c = $(cardHTML(_card, options));
                     c.css("left", _index*newPileSX);
                     c.css("top", _index*newPileSY);
                     c.appendTo(newPile);
+                    c.on("click", {app: app, card: _card, piles: options.piles}, clickEvent);
                 });
                 table.append(newPile);
             }
