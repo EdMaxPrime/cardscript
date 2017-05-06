@@ -432,7 +432,14 @@
             } else if(typeof tags == "object") {
                 for(var i = 0; i < selected.length; i++) {
                     for(var key in tags) {
+                        var old = cards[ selected[i] ].tags[key];
                         cards[ selected[i] ].tags[key] = tags[key];
+                        game.trigger("card_tag", {
+                            card: cards[ selected[i] ].copy(),
+                            name: key,
+                            original: old,
+                            current: tags[key]}
+                        );
                     }
                 }
             }
@@ -611,8 +618,10 @@ if(window.jQuery) {
     function cardHTML(card, options) {
         var str = '<div id="$ID" class="$CLASS">' +
                     '<span class="$CLASS2">$RANK $SUIT</span>' +
+                    '<div class="$CLASS3"></div>' +
                 '</div>';
         str = str.replace("$ID", cardID(options.app, card)).replace("$RANK", card.rank.symbol).replace("$SUIT", card.suit.html);
+        str = str.replace("$CLASS3", options.classes.disabled);
         str = str.replace("$CLASS2", options.classes.name);
         str = str.replace("$CLASS", options.classes.card+" "+(card.suit.parity? options.classes.color1 : options.classes.color2)+" "+(card.tags.facedown? options.classes.back : options.classes.front));
         return str;
@@ -673,7 +682,8 @@ if(window.jQuery) {
                 color2: "card-black",
                 name: "card-name",
                 pile_full: "pile",
-                pile_empty: "pile"
+                pile_empty: "pile",
+                disabled: "disabled"
             },
             piles: {}
         });
@@ -708,6 +718,7 @@ if(window.jQuery) {
                     c = $(cardHTML(_card, options));
                     c.css("left", _index*newPileSX);
                     c.css("top", _index*newPileSY);
+                    c.children("."+options.classes.disabled).hide();
                     c.appendTo(newPile);
                     c.on("click", {app: app, card: _card, piles: options.piles}, cardClickEvent);
                 });
@@ -839,6 +850,15 @@ if(window.jQuery) {
                         moveTime: 1500,
                         shiftTime: 1500
                     };
+                }
+            }
+        });
+        app.listen("card_tag", function(evt) {
+            if(evt.name == "enabled") {
+                if(evt.current == false) {
+                    $('#'+cardID(app, evt.card)+" ."+options.classes.disabled).show();
+                } else {
+                    $('#'+cardID(app, evt.card)+" ."+options.classes.disabled).hide();
                 }
             }
         });
