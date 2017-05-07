@@ -709,6 +709,14 @@ if(window.jQuery) {
             throw ("Expected a Game instance, instead got " + (typeof app) + " in $().cardgame(Game, options)");
         else options.app = app;
         var table = this;
+        for(var wrapper in options.piles) { //default values
+            wrapper = options.piles[wrapper];
+            if(wrapper.hasOwnProperty("inherit") && options.piles.hasOwnProperty(wrapper.inherit)) {
+                for(var prop in options.piles[wrapper.inherit]) {
+                    if(!wrapper.hasOwnProperty(prop)) wrapper[prop] = options.piles[wrapper.inherit][prop];
+                }
+            }
+        }
         app.listen("newpile", function(evt) {
             if(options.piles.hasOwnProperty(evt.name)) {
                 var id = pileID(app, evt.name);
