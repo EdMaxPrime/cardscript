@@ -617,13 +617,15 @@ if(window.jQuery) {
 (function($) {
     function cardHTML(card, options) {
         var str = '<div id="$ID" class="$CLASS">' +
-                    '<span class="$CLASS2">$RANK $SUIT</span>' +
-                    '<div class="$CLASS3"></div>' +
+                    '<span class="$NAME">$RANK $SUIT</span>' +
+                    '<div class="$BACK" data-role="backside"></div>' +
+                    '<div class="$OVERLAY" data-role="overlay"></div>' +
                 '</div>';
         str = str.replace("$ID", cardID(options.app, card)).replace("$RANK", card.rank.symbol).replace("$SUIT", card.suit.html);
-        str = str.replace("$CLASS3", options.classes.disabled);
-        str = str.replace("$CLASS2", options.classes.name);
-        str = str.replace("$CLASS", options.classes.card+" "+(card.suit.parity? options.classes.color1 : options.classes.color2)+" "+(card.tags.facedown? options.classes.back : options.classes.front));
+        str = str.replace("$BACK", options.classes.back);
+        str = str.replace("$OVERLAY", options.classes.disabled);
+        str = str.replace("$NAME", options.classes.name);
+        str = str.replace("$CLASS", options.classes.card+" "+(card.suit.parity? options.classes.color1 : options.classes.color2)+" "+options.classes.front);
         return str;
     }
     function cardID(game, card) {return game.settings.name + "_card_" + card.id;}
@@ -653,6 +655,14 @@ if(window.jQuery) {
             return wrapper.pile || null;
         }
     }
+    function flipCardDown(cardDiv, classes) {
+        if($.fn.transition) {
+            $(cardDiv).transition({rotateY:"180deg"}, 1000, function() {
+                $(this).children('[data-role="backside"]').show();
+            });
+        }
+    }
+    function flipCardUp(card) {}
     function cardClickEvent(event) {
         var currentPile = $(this).parent().attr("id").split("_")[2];
         if(event.data.piles.hasOwnProperty(currentPile)) {
@@ -719,6 +729,7 @@ if(window.jQuery) {
                     c.css("left", _index*newPileSX);
                     c.css("top", _index*newPileSY);
                     c.children("."+options.classes.disabled).hide();
+                    c.children('[data-role="backside"]').hide();
                     c.appendTo(newPile);
                     c.on("click", {app: app, card: _card, piles: options.piles}, cardClickEvent);
                 });
@@ -859,6 +870,12 @@ if(window.jQuery) {
                     $('#'+cardID(app, evt.card)+" ."+options.classes.disabled).show();
                 } else {
                     $('#'+cardID(app, evt.card)+" ."+options.classes.disabled).hide();
+                }
+            }
+            else if(evt.name == "facing") {
+                if(evt.current != evt.original) {
+                    if(evt.current == "up") flipCardUp($('#'+cardID(app, evt.card)));
+                    if(evt.current == "down") flipCardDown($('#'+cardID(app, evt.card)));
                 }
             }
         });

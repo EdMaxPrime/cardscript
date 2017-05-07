@@ -7,6 +7,7 @@
     <body>
         <div id="container"></div>
         <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.transit.min.js"></script>
         <script type="text/javascript" src="js/cardscript.js"></script>
         <script type="text/javascript">
             var app = new cards.Game();
@@ -55,7 +56,7 @@
                     test5.select(test5.find(data.card)).moveTo(test4);
                 }
             });
-            test4.select(0).tag({enabled: false});
+            test4.select({index:[0,1]}).tag({facing: "down"});
         </script>
     </body>
 </html>
