@@ -41,7 +41,7 @@
                 background: "green",
                 piles: {
                     meow: {x: "center", y:"bottom", spreadx:30, spready:-20},
-                    hand: {x: "center", y:"top", spreadx:30}
+                    hand: {x: "center", y:"top", spreadx:30, facing: "down"}
                 }
             });
             var test4 = app.createPile(['JH', '3S', 'TD'], "meow");
@@ -59,7 +59,7 @@
             test4.select({index:[0,1]}).tag({facing: "down"});
             window.setTimeout(function() {
                 console.log("yolo");
-                test4.select({index:[0,1]}).tag({facing: "up"});
+                test4.select({index:[0]}).tag({enabled: false});
             }, 10);
         </script>
     </body>

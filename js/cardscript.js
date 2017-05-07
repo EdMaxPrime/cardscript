@@ -653,6 +653,8 @@ if(window.jQuery) {
             return defaults.shiftTime.remove;
         } else if(property == "pile") {
             return wrapper.pile || null;
+        } else if(property == "facing") {
+            return wrapper.facing || defaults.facing;
         }
     }
     function flipCardDown(cardDiv) {
@@ -688,6 +690,7 @@ if(window.jQuery) {
             swapTime: "short",
             moveTime: 1500,
             shiftTime: {add: 1500, remove: 1500},
+            facing: "up",
             classes: {
                 card: "card",
                 front: "card-front",
@@ -739,6 +742,7 @@ if(window.jQuery) {
                 });
                 table.append(newPile);
                 newPile.on("click", {app: app, wrapper: options.piles[evt.name]}, pileClickEvent);
+                evt.value.select(true).tag({facing: getProperty("facing", options.piles[evt.name], options)});
             }
         });
         app.listen("remove", function(evt) {
