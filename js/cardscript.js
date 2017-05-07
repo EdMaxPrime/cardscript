@@ -655,14 +655,18 @@ if(window.jQuery) {
             return wrapper.pile || null;
         }
     }
-    function flipCardDown(cardDiv, classes) {
+    function flipCardDown(cardDiv) {
         if($.fn.transition) {
-            $(cardDiv).transition({rotateY:"180deg"}, 1000, function() {
-                $(this).children('[data-role="backside"]').show();
-            });
+            $(cardDiv).transition({rotateY:"180deg"}, 1000);
         }
+        $(cardDiv).children('[data-role="backside"]').slideDown(1000);
     }
-    function flipCardUp(card) {}
+    function flipCardUp(cardDiv) {
+        if($.fn.transition) {
+            $(cardDiv).transition({rotateY:"0deg"}, 1000);
+        }
+        $(cardDiv).children('[data-role="backside"]').slideUp(1000);
+    }
     function cardClickEvent(event) {
         var currentPile = $(this).parent().attr("id").split("_")[2];
         if(event.data.piles.hasOwnProperty(currentPile)) {

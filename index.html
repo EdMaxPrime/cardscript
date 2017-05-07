@@ -57,6 +57,10 @@
                 }
             });
             test4.select({index:[0,1]}).tag({facing: "down"});
+            window.setTimeout(function() {
+                console.log("yolo");
+                test4.select({index:[0,1]}).tag({facing: "up"});
+            }, 10);
         </script>
     </body>
 </html>
