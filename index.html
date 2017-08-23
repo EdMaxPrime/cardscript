@@ -39,6 +39,7 @@
             console.log(" H --> " + test3.rank.name + " of " + test3.suit.name);*/
             $("#container").cardgame(app, {
                 background: "green",
+                shiftTime: {add: 500, remove: 500},
                 piles: {
                     meow: {x: "center", y:"bottom", spreadx:30, spready:-20},
                     hand: {x: "center", y:"top", spreadx:30}
@@ -56,11 +57,6 @@
                     test5.select(test5.find(data.card)).moveTo(test4);
                 }
             });
-            test4.select({index:[0,1]}).tag({facing: "down"});
-            window.setTimeout(function() {
-                console.log("yolo");
-                test4.select({index:[0]}).tag({enabled: false});
-            }, 10);
         </script>
     </body>
 </html>
