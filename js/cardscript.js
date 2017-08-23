@@ -685,25 +685,7 @@ if(window.jQuery) {
         });
     }
     $.fn.cardgame = function(app, options) {
-        $.extend(true, options, {
-            background: false,
-            swapTime: "short",
-            moveTime: 1500,
-            shiftTime: {add: 1500, remove: 1500},
-            facing: "up",
-            classes: {
-                card: "card",
-                front: "card-front",
-                back: "card-back",
-                color1: "card-red",
-                color2: "card-black",
-                name: "card-name",
-                pile_full: "pile",
-                pile_empty: "pile",
-                disabled: "disabled"
-            },
-            piles: {}
-        });
+        options = $.extend(true, {}, $.fn.cardgame.defaults, options);
         if(options.background != false) {this.css("background", options.background);}
         if(!(app instanceof cards.Game))
             throw ("Expected a Game instance, instead got " + (typeof app) + " in $().cardgame(Game, options)");
@@ -897,6 +879,24 @@ if(window.jQuery) {
         });
         return this;
     }
-    $.fn.cardgame.defaults = {};
+    $.fn.cardgame.defaults = {
+        background: false,
+        swapTime: "short",
+        moveTime: 1500,
+        shiftTime: {add: 1500, remove: 1500},
+        facing: "up",
+        classes: {
+            card: "card",
+            front: "card-front",
+            back: "card-back",
+            color1: "card-red",
+            color2: "card-black",
+            name: "card-name",
+            pile_full: "pile",
+            pile_empty: "pile",
+            disabled: "disabled"
+        },
+        piles: {}
+    };
 })(jQuery);
 }

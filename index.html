@@ -39,7 +39,8 @@
             console.log(" H --> " + test3.rank.name + " of " + test3.suit.name);*/
             $("#container").cardgame(app, {
                 background: "green",
-                shiftTime: {add: 500, remove: 500},
+                shiftTime: {add: 150, remove: 150},
+                facing: "down",
                 piles: {
                     meow: {x: "center", y:"bottom", spreadx:30, spready:-20},
                     hand: {x: "center", y:"top", spreadx:30}
