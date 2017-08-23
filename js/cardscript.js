@@ -617,7 +617,7 @@ if(window.jQuery) {
 (function($) {
     function cardHTML(card, options) {
         var str = '<div id="$ID" class="$CLASS">' +
-                    '<span class="$NAME">$RANK $SUIT</span>' +
+                    '<span class="$NAME">$RANK<br>$SUIT</span>' +
                     '<div class="$BACK" data-role="backside"></div>' +
                     '<div class="$OVERLAY" data-role="overlay"></div>' +
                 '</div>';
