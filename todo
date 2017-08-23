@@ -1,0 +1,6 @@
+===TODO===
+Use Jquery's animation methods to set up a faster
+system of moving cards - perhaps stop() and finish().
+Right now everything uses the table as a Queue,
+which means that only one animation can happen at
+a time. 
