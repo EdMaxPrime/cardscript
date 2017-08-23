@@ -1,8 +1,19 @@
-#todo
-index.html: ""
-cardscript.js:
-  select:
-    -new representations of rank and suit
+# New Game:
+#     var app = new cards.Game();
+#
+# Bind it to the DOM:
+#     $().cardgame(the game instance, options)
+# where options is an object:
+#     {
+#         background: some CSS color for the container,
+#         swapTime: the time it takes to swap 2 cards,
+#         moveTime: the time it takes to move cards between piles
+#         shiftTime: the time it takes to move cards when the pile changes size,
+#         facing: either "up" or "down",
+#         piles: {
+#             pile name : properties like x, y, spreadx, spready, pile (Pile instance), swapTime, moveTime, shiftTime
+#         }
+#     }
 
 events:
   newpile:
