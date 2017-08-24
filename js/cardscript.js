@@ -674,13 +674,17 @@ if(window.jQuery) {
         if(event.data.piles.hasOwnProperty(currentPile)) {
             event.data.app.trigger("choose", {
                 card: event.data.card,
-                pile: event.data.piles[currentPile].pile
+                pile: event.data.piles[currentPile].pile,
+                index: $(this).index(),
+                wrapper: event.data.piles[currentPile]
             });
         }
     }
     function pileClickEvent(event) {
         event.data.app.trigger("choose_pile", {
+            card: undefined,
             pile: event.data.wrapper.pile,
+            index: undefined,
             wrapper: event.data.wrapper
         });
     }
