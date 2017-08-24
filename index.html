@@ -47,7 +47,6 @@
             });
             var test4 = app.createPile(['JH', '3S', 'TD'], "meow");
             var test5 = app.createPile(['7C', 'kC', 'AC'], "hand");
-            var test6 = app.createPile([], {id: "six", x: 70});
             app.listen("choose", function(data) {
                 if(data.pile == test4) {
                     test4.select(test4.find(data.card)).moveTo(test5);
@@ -55,6 +54,8 @@
                     test5.select(test5.find(data.card)).moveTo(test4);
                 }
             });
+            var deck = app.createDeck52({id:"deck", y: 120, facing: "up"});
+            deck.select({range: {from: -1, to: -6}}).moveTo(app.createPile([], {id:"reciever", x: 120, y: 120, spready: 30, facing: "down"}));
         </script>
     </body>
 </html>
