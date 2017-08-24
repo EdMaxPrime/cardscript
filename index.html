@@ -40,7 +40,6 @@
             $("#container").cardgame(app, {
                 background: "green",
                 shiftTime: {add: 150, remove: 150},
-                facing: "down",
                 piles: {
                     meow: {x: "center", y:"bottom", spreadx:30, spready:-20},
                     hand: {x: "center", y:"top", spreadx:30}
@@ -48,9 +47,6 @@
             });
             var test4 = app.createPile(['JH', '3S', 'TD'], "meow");
             var test5 = app.createPile(['7C', 'kC', 'AC'], "hand");
-            //test4.swap(0, 2);
-            //test4.select({index:[0]}).moveTo(test5, "start");
-            //test4.swap(0, 1);
             app.listen("choose", function(data) {
                 if(data.pile == test4) {
                     test4.select(test4.find(data.card)).moveTo(test5);

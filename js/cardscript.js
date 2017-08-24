@@ -681,7 +681,7 @@ if(window.jQuery) {
         }
     }
     function pileClickEvent(event) {
-        event.data.app.trigger("choose_pile", {
+        event.data.app.trigger("choose", {
             card: undefined,
             pile: event.data.wrapper.pile,
             index: undefined,
