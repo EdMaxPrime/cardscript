@@ -45,6 +45,11 @@ events:
     card: a copy of the Card
     ideas: 
       -invoked by add method
+  card_tag:
+    card: a copy of the card
+    name: the name of the tag
+    original: the old value of the tag
+    current: the new value of the tag
   choose_pile: 
     choices: an array of Pile objects or their jquery_name String
     callback: "a function that will be called as soon as a pile is clicked on, will receive the chosen pile name"
