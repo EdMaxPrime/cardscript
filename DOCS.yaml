@@ -50,18 +50,15 @@ events:
     name: the name of the tag
     original: the old value of the tag
     current: the new value of the tag
+  #there are two Choose events, fired when something is clicked. The
+  #choose_pile event is always invoked when a pile is clicked. The
+  #choose event is only invoked when that pile has cards and one of
+  #them was clicked.
   choose_pile: 
-    choices: an array of Pile objects or their jquery_name String
-    callback: "a function that will be called as soon as a pile is clicked on, will receive the chosen pile name"
-    ideas:
-      -user should be able to click on pile or any of its cards
-  choose_card:
-    choices: an array of card objects to choose from
-    callback: "a function that will be called when a card is chosen, will recieve the card ID"
-    ideas:
-      -use the .one() method
+    pile: the Pile Object that was selected
+    wrapper: the jQuery plugin wrapper for this pile
   choose:
-    card: the Card Object that was selected
+    card: the Card Object that was selected (copy)
     pile: the Pile Object to which this card belongs
 
 pluginPileWrapper:
