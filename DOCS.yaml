@@ -17,7 +17,7 @@
 
 events:
   newpile:
-    name: a string
+    name: a String 'name' or an Object 'wrapper' with a String named 'id'
     value: a Pile
   remember:
     pile: the Pile affected

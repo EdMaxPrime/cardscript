@@ -47,6 +47,7 @@
             });
             var test4 = app.createPile(['JH', '3S', 'TD'], "meow");
             var test5 = app.createPile(['7C', 'kC', 'AC'], "hand");
+            var test6 = app.createPile([], {id: "six", x: 70});
             app.listen("choose", function(data) {
                 if(data.pile == test4) {
                     test4.select(test4.find(data.card)).moveTo(test5);

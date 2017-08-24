@@ -704,6 +704,10 @@ if(window.jQuery) {
             }
         }
         app.listen("newpile", function(evt) {
+            if(typeof evt.name == "object" && typeof evt.name.id == "string") {
+                options.piles[evt.name.id] = evt.name;
+                evt.name = evt.name.id;
+            }
             if(options.piles.hasOwnProperty(evt.name)) {
                 var id = pileID(app, evt.name);
                 table.children().remove("#"+id);
