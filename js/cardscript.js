@@ -19,7 +19,7 @@
             parity: false
         },
         DIAMONDS: {
-            name: "clubs",
+            name: "diamonds",
             html: "&diams;",
             symbol: "d",
             parity: true
