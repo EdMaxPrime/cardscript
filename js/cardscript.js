@@ -749,10 +749,15 @@ if(window.jQuery) {
             var removedCardDiv = $('#'+cardID(app, evt.card));
             removedCardDiv.finish(); //make sure it is not being animated
             var position = removedCardDiv.position(); //the position of card
-            var originPileDiv = $('#'+pileID(app, pileName));
+            var originPileDiv = $('#'+pileID(app, originPileName));
             position.left += originPileDiv.position().left;
             position.top += originPileDiv.position().top;
-            var destinationName = options.piles[pileName].destination;
+            var destinationName = options.piles[originPileName].destination;
+            //Animate all cards to move down one spot
+            removedCardDiv.nextAll().animate(
+                {left: "-=" + options.piles[originPileName].spreadx, top: "-=" + options.piles[originPileName].spready}, 
+                getProperty("shift-rmv-time", options.piles[originPileName], options)
+            );
             //Add card to its proper parent:
             removedCardDiv.appendTo(table).css(position);
             if(!options.piles.hasOwnProperty(destinationName)) {
@@ -760,16 +765,13 @@ if(window.jQuery) {
             } else {
                 //add this card DIV to the destination pile DIV
                 var destinationPileDiv = $('#'+pileID(app, destinationName));
-                removed.css({
-                    left: removed.position().left - destinationPileDiv.position().left,
-                    top:  removed.position().top - destinationPileDiv.position().top
+                removedCardDiv.css({
+                    left: removedCardDiv.position().left - destinationPileDiv.position().left,
+                    top:  removedCardDiv.position().top - destinationPileDiv.position().top
                 });
-                removed.appendTo(destinationPileDiv);
+                removedCardDiv.appendTo(destinationPileDiv);
             }
-            removed.nextAll().animate(
-                {left: "-=" + options.piles[originPileName].spreadx, top: "-=" + options.piles[originPileName].spready}, 
-                getProperty("shift-rmv-time", options.piles[originPileName], options)
-            );
+            
         });
         app.listen("move", function(evt) {
             var oname = evt.origin.remember("jquery_name"), dname = evt.destination.remember("jquery_name");
