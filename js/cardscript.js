@@ -769,7 +769,7 @@ if(window.jQuery) {
             });
             table.queue(function(dequeue) {
                 removed.appendTo(table).css({left: position.x, top: position.y});
-                if(destinationName == undefined || destinationName == "") {
+                if(!options.piles.hasOwnProperty(destinationName)) {
                     removed.remove(); //delete it
                 } else {
                     //add this card DIV to the destination pile DIV
