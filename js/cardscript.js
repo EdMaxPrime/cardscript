@@ -744,12 +744,12 @@ if(window.jQuery) {
             }
         });
         app.listen("remove", function(evt) {
-            if(!options.piles.hasOwnProperty(evt.origin.remember("jquery_name"))) return;
+            if(!options.piles.hasOwnProperty(evt.origin.remember("jquery_name"))) return; //this pile is not registered
             var pileName = evt.origin.remember("jquery_name");
-            var position = calculateCardPosition(options.piles[pileName], evt.index);
-            var pile = $('#'+pileID(app, pileName));
-            position.x += pile.position().left;
-            position.y += pile.position().top;
+            var position = calculateCardPosition(options.piles[pileName], evt.index); //the position of card
+            var originPileDiv = $('#'+pileID(app, pileName));
+            position.x += originPileDiv.position().left;
+            position.y += originPileDiv.position().top;
             var removed = $('#'+cardID(app, evt.card));
             var destinationName = options.piles[pileName].destination;
             table.queue(function(dequeue) {
