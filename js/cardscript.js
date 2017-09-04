@@ -744,44 +744,32 @@ if(window.jQuery) {
             }
         });
         app.listen("remove", function(evt) {
-            if(!options.piles.hasOwnProperty(evt.origin.remember("jquery_name"))) return; //this pile is not registered
-            var pileName = evt.origin.remember("jquery_name");
-            var position = calculateCardPosition(options.piles[pileName], evt.index); //the position of card
+            var originPileName = evt.origin.remember("jquery_name");
+            if(!options.piles.hasOwnProperty(originPileName)) return; //this pile is not registered
+            var removedCardDiv = $('#'+cardID(app, evt.card));
+            var position = removedCardDiv.position(); //the position of card
             var originPileDiv = $('#'+pileID(app, pileName));
-            position.x += originPileDiv.position().left;
-            position.y += originPileDiv.position().top;
-            var removed = $('#'+cardID(app, evt.card));
+            position.left += originPileDiv.position().left;
+            position.top += originPileDiv.position().top;
             var destinationName = options.piles[pileName].destination;
-            table.queue(function(dequeue) {
-                //if no animation happens, this will cause dequeue() to be called immediately
-                var numberOfCardsMoving = removed.nextAll().length;
-                //move the other cards up 1 space
-                removed.nextAll().each(function(index, elem) {
-                    animationHappened = true;
-                    $(elem).animate({
-                        left: calculateCardPosition(options.piles[pileName], removed.index()+index).x,
-                        top: calculateCardPosition(options.piles[pileName], removed.index()+index).y
-                    }, getProperty("shift-rmv-time", options.piles[pileName], options), function() {
-                        if(index == numberOfCardsMoving-1) dequeue();
-                    });
+            //Add card to its proper parent:
+            removedCardDiv.appendTo(table).css(position);
+            if(!options.piles.hasOwnProperty(destinationName)) {
+                removed.remove(); //delete it
+            } else {
+                //add this card DIV to the destination pile DIV
+                var destinationPileDiv = $('#'+pileID(app, destinationName));
+                removed.css({
+                    left: removed.position().left - destinationPileDiv.position().left,
+                    top:  removed.position().top - destinationPileDiv.position().top
                 });
-                if(numberOfCardsMoving == 0) dequeue();
-            });
-            table.queue(function(dequeue) {
-                removed.appendTo(table).css({left: position.x, top: position.y});
-                if(!options.piles.hasOwnProperty(destinationName)) {
-                    removed.remove(); //delete it
-                } else {
-                    //add this card DIV to the destination pile DIV
-                    var destinationPileDiv = $('#'+pileID(app, destinationName));
-                    removed.css({
-                        left: removed.position().left - destinationPileDiv.position().left,
-                        top:  removed.position().top - destinationPileDiv.position().top
-                    });
-                    removed.appendTo(destinationPileDiv);
-                }
-                dequeue();
-            });
+                removed.appendTo(destinationPileDiv);
+            }
+            removed.nextAll().animate(
+                {left: "-=" + options.piles[originPileName].spreadx, top: "-=" + options.piles[originPileName].spready}, 
+                getProperty("shift-rmv-time", options.piles[originPileName], options),
+                function() {console.log("finished moving");}
+            );
         });
         app.listen("move", function(evt) {
             var oname = evt.origin.remember("jquery_name"), dname = evt.destination.remember("jquery_name");
