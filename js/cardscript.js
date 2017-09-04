@@ -791,18 +791,16 @@ if(window.jQuery) {
                 //put the card DIV in the right spot as a child of the pile DIV
                 if(evt.index != 0) added.insertAfter(dest.children(":nth-child("+evt.index+")"));
                 else added.insertBefore(dest.children(":nth-child(1)"));
+                //move the other cards down 1 space
+                added.nextAll().animate(
+                    {left: "+=" + options.piles[dname].spreadx, top: "+=" + options.piles[dname].spready}, 
+                    getProperty("shift-add-time", options.piles[dname], options)
+                );
                 //slide this card into position
                 added.animate({
                     left: calculateCardPosition(options.piles[dname], evt.index).x,
                     top: calculateCardPosition(options.piles[dname], evt.index).y
                 }, getProperty("move-time", options.piles[dname], options));
-                //move the other cards down 1 space
-                /*added.nextAll().each(function(index, elem) {
-                    $(elem).animate({
-                        left: calculateCardPosition(options.piles[dname], evt.index+index+1).x,
-                        top: calculateCardPosition(options.piles[dname], evt.index+index+1).y
-                    }, getProperty("shift-add-time", options.piles[dname], options));
-                });*/
             }
         });
         app.listen("swap", function(evt) {
