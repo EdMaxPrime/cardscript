@@ -787,31 +787,23 @@ if(window.jQuery) {
             if(!options.piles.hasOwnProperty(dname)) return;
             var added = $('#'+cardID(app, evt.card));
             var dest = $('#'+pileID(app, dname));
-            table.queue(function(dequeue) {
-                if(added.is(dest.children())) {
-                    //put the card DIV in the right spot as a child of the pile DIV
-                    if(evt.index != 0) added.insertAfter(dest.children(":nth-child("+evt.index+")"));
-                    else added.insertBefore(dest.children(":nth-child(1)"));
-                    //slide this card into position
-                    added.animate({
-                        left: calculateCardPosition(options.piles[dname], evt.index).x,
-                        top: calculateCardPosition(options.piles[dname], evt.index).y
-                    }, getProperty("move-time", options.piles[dname], options));
-                    //tells us when dequeue() should be called
-                    var animationHappened = added.nextAll().length;
-                    //move the other cards down 1 space
-                    added.nextAll().each(function(index, elem) {
-                        $(elem).animate({
-                            left: calculateCardPosition(options.piles[dname], evt.index+index+1).x,
-                            top: calculateCardPosition(options.piles[dname], evt.index+index+1).y
-                        }, getProperty("shift-add-time", options.piles[dname], options), function() {
-                            if(index == animationHappened-1) dequeue();
-                        });
-                    });
-                    if(animationHappened == 0) dequeue();
-                }
-            });
-            
+            if(added.is(dest.children())) {
+                //put the card DIV in the right spot as a child of the pile DIV
+                if(evt.index != 0) added.insertAfter(dest.children(":nth-child("+evt.index+")"));
+                else added.insertBefore(dest.children(":nth-child(1)"));
+                //slide this card into position
+                added.animate({
+                    left: calculateCardPosition(options.piles[dname], evt.index).x,
+                    top: calculateCardPosition(options.piles[dname], evt.index).y
+                }, getProperty("move-time", options.piles[dname], options));
+                //move the other cards down 1 space
+                /*added.nextAll().each(function(index, elem) {
+                    $(elem).animate({
+                        left: calculateCardPosition(options.piles[dname], evt.index+index+1).x,
+                        top: calculateCardPosition(options.piles[dname], evt.index+index+1).y
+                    }, getProperty("shift-add-time", options.piles[dname], options));
+                });*/
+            }
         });
         app.listen("swap", function(evt) {
             var pileName = evt.pile.remember("jquery_name");
