@@ -48,9 +48,12 @@
             var test4 = app.createPile(['JH', '3S', 'TD'], "meow");
             var test5 = app.createPile(['7C', 'kC', 'AC'], "hand");
             app.listen("choose", function(data) {
+                if(data.card == undefined) return;
                 if(data.pile == test4) {
+                    console.log(data.card);
+                    console.log(test4.find(data.card) + " " + data.card.suit.name + " " + data.card.rank.name);
                     test4.select(test4.find(data.card)).moveTo(test5);
-                } else {
+                } else if(data.pile == test5) {
                     test5.select(test5.find(data.card)).moveTo(test4);
                 }
             });
