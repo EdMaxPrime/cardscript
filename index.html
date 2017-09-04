@@ -50,8 +50,6 @@
             app.listen("choose", function(data) {
                 if(data.card == undefined) return;
                 if(data.pile == test4) {
-                    console.log(data.card);
-                    console.log(test4.find(data.card) + " " + data.card.suit.name + " " + data.card.rank.name);
                     test4.select(test4.find(data.card)).moveTo(test5);
                 } else if(data.pile == test5) {
                     test5.select(test5.find(data.card)).moveTo(test4);

@@ -747,6 +747,7 @@ if(window.jQuery) {
             var originPileName = evt.origin.remember("jquery_name");
             if(!options.piles.hasOwnProperty(originPileName)) return; //this pile is not registered
             var removedCardDiv = $('#'+cardID(app, evt.card));
+            removedCardDiv.finish(); //make sure it is not being animated
             var position = removedCardDiv.position(); //the position of card
             var originPileDiv = $('#'+pileID(app, pileName));
             position.left += originPileDiv.position().left;
@@ -767,8 +768,7 @@ if(window.jQuery) {
             }
             removed.nextAll().animate(
                 {left: "-=" + options.piles[originPileName].spreadx, top: "-=" + options.piles[originPileName].spready}, 
-                getProperty("shift-rmv-time", options.piles[originPileName], options),
-                function() {console.log("finished moving");}
+                getProperty("shift-rmv-time", options.piles[originPileName], options)
             );
         });
         app.listen("move", function(evt) {
