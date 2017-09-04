@@ -14,6 +14,11 @@
 #             pile name : properties like x, y, spreadx, spready, pile (Pile instance), swapTime, moveTime, shiftTime
 #         }
 #     }
+#
+# It is now a feature that a card's facing direction
+# takes priority over the pile's facing setting. Unless
+# a new Pile is being created, then each card adopts a
+# facing direction.
 
 events:
   newpile:

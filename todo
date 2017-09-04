@@ -5,12 +5,5 @@ Right now everything uses the table as a Queue,
 which means that only one animation can happen at
 a time.
 
-When moving multiple cards at a time, as seen in the
-example I made, the deque sequence makes it so that
-only the last card moves normally and the ones before
-it move quickly.
-
-Also, cards don't change their orientation when
-moving to a pile with a different facing setting.
-This is due to them not getting checked when they are
-added to the new pile DIV.
+Fix swap events so that they work with shuffling a
+deck.
