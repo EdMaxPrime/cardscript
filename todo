@@ -7,3 +7,7 @@ a time.
 
 Fix swap events so that they work with shuffling a
 deck.
+
+Incorporate dragging and dropping functionality.
+Make events and a Remember/Tag to track what can
+do what.

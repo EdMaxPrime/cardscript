@@ -8,6 +8,7 @@
         <div id="container"></div>
         <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
         <script type="text/javascript" src="js/jquery.transit.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/cardscript.js"></script>
         <script type="text/javascript">
             var app = new cards.Game();
@@ -57,7 +58,6 @@
             });
             var deck = app.createDeck52({id:"deck", y: 120, facing: "up"});
             deck.select({range: {from: -1, to: -10}}).moveTo(app.createPile([], {id:"reciever", x: 120, y: 120, spready: 30, facing: "down"}));
-            console.log($("#container").cgOWO);
         </script>
     </body>
 </html>
