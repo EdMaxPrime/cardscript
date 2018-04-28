@@ -5,9 +5,6 @@ Right now everything uses the table as a Queue,
 which means that only one animation can happen at
 a time.
 
-Fix swap events so that they work with shuffling a
-deck.
-
 Incorporate dragging and dropping functionality.
 Make events and a Remember/Tag to track what can
 do what.
