@@ -12,32 +12,6 @@
         <script type="text/javascript" src="js/cardscript.js"></script>
         <script type="text/javascript">
             var app = new cards.Game();
-            /*var test = app.createPile(["2H", "3D", "KS", "AC", "KD"]);
-            console.log(test.stringify());
-            test.select(1);
-            console.log(test.stringSelected());
-            test.reverse();
-            console.log(test.stringify());
-            console.log(test.stringSelected());
-            var test2 = app.createDeck52();
-            var test2_str = "", test2_num = 0;
-            test2.select({rank: '9'}).foreach(function(card, index, isLast) {
-                test2_str += card.rank.symbol+"#"+index+"#"+test2.find(card);
-                if(!isLast) test2_str += ", ";
-            }).forall(function(card, index, selected) {
-                test2_num++;
-            });
-            console.log(test2_str + " out of " + test2_num);
-            var test3 = cards.decode("3H");
-            console.log("3H --> " + test3.rank.name + " of " + test3.suit.name);
-            test3 = cards.decode("Q Hearts");
-            console.log("Q Hearts --> " + test3.rank.name + " of " + test3.suit.name);
-            test3 = cards.decode("ace S");
-            console.log("ace S --> " + test3.rank.name + " of " + test3.suit.name);
-            test3 = cards.decode("6$");
-            console.log("6$ --> " + test3.rank.name + " of " + test3.suit.name);
-            test3 = cards.decode(" H");
-            console.log(" H --> " + test3.rank.name + " of " + test3.suit.name);*/
             $("#container").cardgame(app, {
                 background: "green",
                 shiftTime: {add: 150, remove: 150},
@@ -51,11 +25,12 @@
             app.listen("choose", function(data) {
                 if(data.card == undefined) return;
                 if(data.pile == test4) {
-                    test4.select(test4.find(data.card)).moveTo(test5, "start");
+                    test4.select(data.index).moveTo(test5, "start");
                 } else if(data.pile == test5) {
-                    test5.select(test5.find(data.card)).moveTo(test4);
+                    test5.select(data.index).moveTo(test4);
                 }
             });
+            test4.shuffle();
             var deck = app.createDeck52({id:"deck", y: 120, facing: "up"});
             deck.select({range: {from: -1, to: -10}}).moveTo(app.createPile([], {id:"reciever", x: 120, y: 120, spready: 30, facing: "down"}));
         </script>
