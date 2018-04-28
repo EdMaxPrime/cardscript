@@ -91,21 +91,23 @@
         }
         return {rank: NULL_RANK, suit: NULL_SUIT};
     }
-    function merge(a, b) {
+    /* merge(a) returns a shallow copy
+       merge(a, b) returns an object with all the properties of a and b, but if they share a property then b's take precedence 
+       the levels parameter is a number >= 0 that specifies how deep the merge should be; 0 means shallow */
+    function merge(a, b, levels) {
+        if(typeof a != "object" || typeof b != "object") return (b || a);
         var union = {};
+        levels = levels || 0;
         for(var k in a) {
             union[k] = a[k];
         }
         if(b != undefined) {
             for(var k in b) {
-                if(!union.hasOwnProperty(k)) {
-                    union[k] = b[k];
-                } 
-                else if(typeof union[k] != "object" && Array.isArray(union[k]) == false) {
+                if(!union.hasOwnProperty(k) || typeof union[k] != "object" || Array,isArray(union[k]) == true || levels <= 0) {
                     union[k] = b[k];
                 }
                 else {
-                    union[k] = merge(a[k], b[k]);
+                    union[k] = merge(a[k], b[k], levels - 1);
                 }
             }
         }
@@ -113,18 +115,20 @@
     }
     function Game(opts) {
         this.settings = merge({
-            players: 1,
             name: "",
-            rules: {a: "lol"},
+            compare: function(c1, c2, rankOrder) {
+                if(rankOrder[c1.rank.symbol] <  rankOrder[c2.rank.symbol]) return -1; //c1 < c2
+                if(rankOrder[c1.rank.symbol] == rankOrder[c2.rank.symbol]) return 0; //c1 = c2
+                if(rankOrder[c1.rank.symbol] >  rankOrder[c2.rank.symbol]) return 1; //c1 > c2
+            },
             order: {a:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, t:10, j:11, q:12, k:13}
         }, opts);
-        var nextCardID = 0;
+        var nextCardID = 0; //each card gets a unique number
         var listeners = [], events = {};
         this.createPile = function(list, name) {
+            var theNewOne = new Pile([]);
             if(list === "" || list == undefined || typeof list != "object") {
-                var theNewOne = new Pile([]);
-                this.trigger("newpile", {name: name, value: theNewOne});
-                return theNewOne;
+                theNewOne = new Pile([], this);
             }
             else if(Array.isArray(list)) {
                 var arrayOfCards = [];
@@ -132,10 +136,10 @@
                     arrayOfCards.push(new Card(list[i], nextCardID));
                     nextCardID++;
                 }
-                var theNewOne = new Pile(arrayOfCards, this);
-                this.trigger("newpile", {name: name, value: theNewOne});
-                return theNewOne;
+                theNewOne = new Pile(arrayOfCards, this);
             }
+            this.trigger("newpile", {name: name, value: theNewOne});
+            return theNewOne;
         }
         this.createDeck52 = function(meta) {
             var all52 = [];
@@ -152,9 +156,7 @@
             } else if(!(c1.hasOwnProperty("rank")) && !(c2.hasOwnProperty("rank"))) {
                 throw ("Cards can only be compared to other cards\n  in Game.compare(Card, Card)");
             } else {
-                if(this.settings.order[c1.rank.symbol] < this.settings.order[c2.rank.symbol]) return -1; //c1 < c2
-                if(this.settings.order[c1.rank.symbol] == this.settings.order[c2.rank.symbol]) return 0; //c1 = c2
-                if(this.settings.order[c1.rank.symbol] > this.settings.order[c2.rank.symbol]) return 1; //c1 > c2
+                return this.settings.compare(c1, c2, this.settings.order);
             }
         }
         this.listen = function(event, callback) {
@@ -181,7 +183,7 @@
             var rs = string2RS(arguments[0]);
             this.rank = rs.rank;
             this.suit = rs.suit;
-            if(rank != undefined) {this.id = rank;} //id is 2nd param in this case
+            if(arguments[1] != undefined) {this.id = arguments[1];} //id is 2nd param in this case
         }
         else {
             this.suit = suit;
@@ -190,12 +192,12 @@
         }
         this.tags = {};
         this.copy = function() {
-            var copy = new Card(this.suit, this.rank, this.id);
-            copy.suit = {name:this.suit.name, symbol:this.suit.symbol, html:this.suit.html, parity:this.suit.parity};
-            copy.rank = {name:this.rank.name, symbol:this.rank.symbol, value:this.rank.value};
-            copy.tags = JSON.parse(JSON.stringify(this.tags));
-            copy.id   = this.id;
+            var copy = new Card(merge(this.suit), merge(this.rank), this.id);
+            copy.tags = merge(this.tags);
             return copy;
+        }
+        this.toString = function() {
+            return this.rank.symbol + this.suit.symbol;
         }
     }
     function Pile(arrayOfCards, owner) {
@@ -225,7 +227,7 @@
           - function(card, index, selected) --> return true to select this card
           - object --> with any of the following properties:
             - index:INT,ARRAY  --> selects cards at this index/indices
-            - range:OBJECT,ARRAY --> selects cards using python indexing rules
+            - range:OBJECT,ARRAY --> selects cards using python indexing rules, {from, to, step}
             - property:STRING --> either "highest" or "lowest"
             - suit:CHAR,ARRAY --> must be the one letter symbol of the suit or an array of those
             - rank:CHAR,ARRAY --> must be the one letter symbol of the rank or an array of those
@@ -536,8 +538,9 @@
             }
             if(which.length >= 2) {
                 game.trigger("swap", {
-                    pile: this, index1: which[0], card1: cards[which[0]].copy(),
-                    index2: which[1], card2: cards[which[1]].copy()
+                    pile: this, 
+                    index1: Math.min(which[0], which[1]), card1: cards[Math.min(which[0], which[1])].copy(),
+                    index2: Math.max(which[0], which[1]), card2: cards[Math.max(which[0], which[1])].copy()
                 });
                 var temp = cards[which[0]];
                 cards[which[0]] = cards[which[1]];
@@ -552,15 +555,20 @@
             }
             return this;
         }
+        this.shuffle = function(n) { /* Shuffles the deck n times */
+            if(typeof n != "number" || n < 0) n = 1;
+            for(var i = 0; i < n * this.size(); i++) {
+                this.swap(i % this.size(), this.randomIndex());
+            }
+        }
         this.randomIndex = function() {
             return Math.floor(Math.random()*this.size());
         }
-        /**Expects a string in the form <Rank><Suit> where
-           rank and suit are one-character representations
+        /**Expects a string in the form <Rank><Suit>
            OR a card object with desired rank and suit
            @return  the index of the card, or -1 if not found*/
         this.find = function(_card) {
-            if(typeof _card == "string" && _card.length == 2) {
+            if(typeof _card == "string") {
                 _card = new Card(_card, -1);
                 return this.find(_card);
             }
@@ -591,10 +599,10 @@
             }
             return this;
         }
-        this.stringify = function() {
+        this.toString = function() {
             var str = "[";
             for(var i = 0; i < cards.length; i++) {
-                str += cards[i].rank.symbol + cards[i].suit.symbol.toUpperCase() + "@" + cards[i].id;
+                str += cards[i].toString() + "@" + cards[i].id;
                 if(i < cards.length - 1) {str += ", ";}
             }
             return str + "]";
@@ -602,7 +610,7 @@
         this.stringSelected = function() {
             var str = "[";
             for(var i = 0; i < selected.length; i++) {
-                str += cards[selected[i]].rank.symbol + cards[selected[i]].suit.symbol.toUpperCase() + "#" + selected[i];
+                str += cards[selected[i]].toString() + "#" + selected[i];
                 if(i < selected.length - 1) {str += ", ";}
             }
             return str + "]";
@@ -675,7 +683,7 @@ if(window.jQuery) {
             event.data.app.trigger("choose", {
                 card: event.data.card,
                 pile: event.data.piles[currentPile].pile,
-                index: $(this).index(),
+                index: $(this).index() - 1,
                 wrapper: event.data.piles[currentPile]
             });
         }
@@ -828,10 +836,8 @@ if(window.jQuery) {
                     else dequeue();
                 });
                 //fix card order in the DOM
-                if(evt.index1 == 0) card2.insertBefore(pileDiv.children(":nth-child(1)"));
-                else if(evt.index1 > 0) card2.insertAfter(pileDiv.children(":nth-child("+(evt.index1+1)+")"));
-                if(evt.index2 == 0) card1.insertBefore(pileDiv.children(":nth-child(1)"));
-                else if(evt.index2 > 0) card1.insertAfter(pileDiv.children(":nth-child("+(evt.index2+1)+")"));
+                card2.insertBefore(card1);
+                card1.insertAfter(pileDiv.children(":nth-child(" + (evt.index2 + 1) + ")"));
             });
         });
         app.listen("remember", function(evt) {
