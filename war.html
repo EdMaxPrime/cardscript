@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>War Card Game</title>
+    </head>
+    <body>
+        <div id="container"></div>
+        <h2>North: <span id="p2">26</span> and South: <span id="p1">26</span></h2>
+        <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.transit.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="js/cardscript.js"></script>
+        <script type="text/javascript">
+            var app = new cards.Game();
+            $("#container").cardgame(app, {
+                background: "green",
+                shiftTime: {add: 150, remove: 150},
+                piles: {
+                    hand1: {x: "center", y:"bottom", facing: "down"},
+                    hand2: {inherit: "hand1", y: "top"},
+                    playPile1: {x: "center", y: 300, facing: "up", spreadx: 50},
+                    playPile2: {inherit: "playPile1", y: 100}
+                }
+            });
+            var playPile1 = app.createPile([], "playPile1");
+            var playPile2 = app.createPile([], "playPile2");
+            var hand2 = app.createPile([], "hand2");
+            var hand1 = app.createDeck52("hand1");
+            hand1.shuffle();
+            hand1.select({range: {from: 0, to: 25}}).moveTo(hand2);
+            app.listen("choose", function(data) {
+                if(data.pile == hand1 && data.index == undefined) {
+                    hand1.select(-1, true).tag("facing", "up").moveTo(playPile1);
+                    hand2.select(-1, true).tag("facing", "up").moveTo(playPile2);
+                    setTimeout(function() {
+                        var compare = app.compare(playPile1.get(-1), playPile2.get(-1));
+                        if(compare < 0) {
+                            playPile1.select(true).tag("facing", "down").moveTo(hand2, "start");
+                            playPile2.select(true).tag("facing", "down").moveTo(hand2, "start");
+                        }
+                        else if(compare > 0) {
+                            playPile2.select(true).tag("facing", "down").moveTo(hand1, "start");
+                            playPile1.select(true).tag("facing", "down").moveTo(hand1, "start");
+                        }
+                        else {
+                            hand1.select({index: [-1, -2, -3]}, true).moveTo(playPile1);
+                            hand2.select({index: [-1, -2, -3]}, true).moveTo(playPile2);
+                        }
+                        $("#p1").text(hand1.size());
+                        $("#p2").text(hand2.size());
+                    }, 4000);
+                    
+                }
+            });
+        </script>
+    </body>
+</html>
