@@ -223,8 +223,9 @@
         }
         /*Selectors:
           - true   --> select everything
+          - false  --> deselect everything
           - number --> select that index
-          - function(card, index, selected) --> return true to select this card
+          - function(card, index, selection) --> return true to select this card
           - object --> with any of the following properties:
             - index:INT,ARRAY  --> selects cards at this index/indices
             - range:OBJECT,ARRAY --> selects cards using python indexing rules, {from, to, step}
@@ -232,10 +233,16 @@
             - suit:CHAR,ARRAY --> must be the one letter symbol of the suit or an array of those
             - rank:CHAR,ARRAY --> must be the one letter symbol of the rank or an array of those
             - union:BOOLEAN   --> default false. If true, each property acts like an independent
-                                  selector, otherwise only cards that share all these properties
-                                  are selected
+                                  selector, and cards are added to the selection. Otherwise only
+                                  cards that share all these properties and are already selected
+                                  will remain in the selection.
+            @param what               a valid selector (see above)
+            @param makeNewSelection   a boolean indicating whether the previous selection should
+                                      be cleared. If true, this is like p.select(true).select(s)
+                                      or p.select().select({union: true, ...}); default false.
             */
-        this.select = function(what) {
+        this.select = function(what, makeNewSelection) {
+            if(makeNewSelection === true) selected = [];
             if(typeof what == "function") {
                 for(var i = 0; i < cards.length; i++) {
                     if(what(cards[i].copy(), i, selected.slice()) === true) {
@@ -249,7 +256,7 @@
                     selected.push(parseInt(x));
             }
             else if(typeof what == "number") {
-                this.select({index: what});
+                this.select({index: what}, makeNewSelection);
             }
             else if(typeof what == "object") {
                 what.union = what.union || false;
@@ -299,7 +306,7 @@
                             }
                         }
                     }
-                    this.select({index: indices, union: what.union});
+                    this.select({index: indices, union: what.union}, makeNewSelection);
                 }
                 if(what.hasOwnProperty("suit")) {
                     var _suits = [];
@@ -394,6 +401,10 @@
             }
             return this;
         }
+        this.get = function(index) { /* Returns a copy of the card at the given index */
+            if(index < 0) index += this.size();
+            if(index >= 0 && index < this.size()) return cards[ index ].copy();
+        }
         this.peekSelected = function() {
             return selected.slice(); //return a copy, array of indices
         }
@@ -404,10 +415,10 @@
             }
             return view;
         }
-        this.count = function() {
+        this.count = function() { /* Returns the number of selected cards */
             return selected.length;
         }
-        this.foreach = function(fxn, thisValue) {
+        this.foreach = function(fxn, thisValue) { /* Loops through the selection */
             if(typeof fxn == "function") {
                 thisValue = thisValue || this;
                 var v = this.view();
@@ -417,7 +428,7 @@
             }
             return this;
         }
-        this.forall = function(fxn, thisValue) {
+        this.forall = function(fxn, thisValue) { /* Loops through all cards */
             if(typeof fxn == "function") {
                 thisValue = thisValue || this;
                 for(var i = 0; i < cards.length; i++) {
@@ -426,11 +437,17 @@
             }
             return this;
         }
-        this.tag = function(tags) {
-            if(typeof tags == "string") { //set flag to true
-                var flag = {};
-                flag[tags] = true;
-                this.tag(flag);
+        /* Sets tags for selected cards; use tag(key), tag(key, value), tag(object) */
+        this.tag = function(tags) { 
+            if(typeof tags == "string") {
+                if(arguments.length == 1) { //set that single tag to true
+                    this.tag(arguments[0], true);
+                } 
+                else if(arguments.length == 2) { //covert it into a key-value pair
+                    var tag = {};
+                    tag[ arguments[0] ] = arguments[1];
+                    this.tag(tag);
+                }
             } else if(typeof tags == "object") {
                 for(var i = 0; i < selected.length; i++) {
                     for(var key in tags) {
@@ -458,34 +475,34 @@
                 //add cards to destination
                 switch(method) {
                     case "start":
-                    destination.add(notMine, 0);
-                    break;
+                        destination.add(notMine, 0);
+                        break;
                     case "end":
-                    destination.add(notMine);
-                    break;
+                        destination.add(notMine);
+                        break;
                     case "before":
-                    var otherIndices = destination.peekSelected(), current = 0, resets = 0;
-                    if(otherIndices.length == 0) otherIndices = [0]; //insert to beginning by default
-                    for(var i = 0; i < notMine.length; i++) {
-                        destination.add(notMine[i], otherIndices[current]+current+resets);
-                        current++;
-                        if(current == otherIndices.length) {current = 0; resets++;}
-                    }
-                    break;
+                        var otherIndices = destination.peekSelected(), current = 0, resets = 0;
+                        if(otherIndices.length == 0) otherIndices = [0]; //insert to beginning by default
+                        for(var i = 0; i < notMine.length; i++) {
+                            destination.add(notMine[i], otherIndices[current]+current+resets);
+                            current++;
+                            if(current == otherIndices.length) {current = 0; resets++;}
+                        }
+                        break;
                     case "after":
-                    var otherIndices = destination.peekSelected(), current = 0, resets = 0;
-                    if(otherIndices.length == 0) otherIndices = [destination.size()-1]; //insert at end by default
-                    for(var i = 0; i < notMine.length; i++) {
-                        destination.add(notMine[i], otherIndices[current]+current+resets+1);
-                        current++;
-                        if(current == otherIndices.length) {current = 0; resets++;}
-                    }
-                    break;
+                        var otherIndices = destination.peekSelected(), current = 0, resets = 0;
+                        if(otherIndices.length == 0) otherIndices = [destination.size()-1]; //insert at end by default
+                        for(var i = 0; i < notMine.length; i++) {
+                            destination.add(notMine[i], otherIndices[current]+current+resets+1);
+                            current++;
+                            if(current == otherIndices.length) {current = 0; resets++;}
+                        }
+                        break;
                     default: //random
-                    for(var i = 0; i < notMine.length; i++) {
-                        destination.add(notMine[i], destination.randomIndex()); //will never add to end
-                    }
-                    break;
+                        for(var i = 0; i < notMine.length; i++) {
+                            destination.add(notMine[i], destination.randomIndex()); //will never add to end
+                        }
+                        break;
                 }
                 //unselect everything
                 this.select();
